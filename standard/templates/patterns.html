@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+
+{% block title %}연금복권 패턴 분석 - 고급 패턴{% endblock %}
+
+{% block header_title %}🔍 고급 패턴 분석{% endblock %}
+{% block header_subtitle %}홀짝, 연속, 간격 등 상세한 패턴 분석{% endblock %}
+
+{% block head %}
+<style>
+    .pattern-tabs {
+        display: flex;
+        background: white;
+        border-radius: 10px 10px 0 0;
+        overflow: hidden;
+        margin-bottom: 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .pattern-tab {
+        flex: 1;
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: #495057;
+    }
+    
+    .pattern-tab.active {
+        background: white;
+        color: #007bff;
+    }
+    
+    .pattern-tab:hover {
+        background: #e9ecef;
+    }
+    
+    .pattern-tab.active:hover {
+        background: white;
+    }
+    
+    .pattern-content {
+        background: white;
+        padding: 25px;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    
+    .pattern-pane {
+        display: none;
+    }
+    
+    .pattern-pane.active {
+        display: block;
+    }
+    
+    .pattern-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .pattern-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+    }
+    
+    .pattern-value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 5px;
+    }
+    
+    .pattern-label {
+        color: #6c757d;
+        font-size: 0.9em;
+    }
+    
+    .pattern-list {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 10px;
+        background: white;
+    }
+    
+    .pattern-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        margin-bottom: 5px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        border-left: 3px solid #28a745;
+    }
+    
+    .pattern-item:nth-child(odd) {
+        background: #e9ecef;
+    }
+    
+    .insight-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .insight-box h4 {
+        margin-bottom: 15px;
+        color: white;
+    }
+    
+    .chart-preview {
+        text-align: center;
+        margin: 20px 0;
+    }
+    
+    .chart-preview img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if pattern_summary %}
+    <!-- 패턴 분석 개요 -->
+    <div class="card">
+        <h3>📊 패턴 분석 개요</h3>
+        <div class="pattern-grid">
+            <div class="pattern-card">
+                <div class="pattern-value">{{ "{:,}".format(pattern_summary.analysis_summary.total_rounds) }}</div>
+                <div class="pattern-label">분석 회차</div>
+            </div>
+            
+            <div class="pattern-card">
+                <div class="pattern-value">{{ pattern_summary.odd_even_insights.overall_odd_percentage }}%</div>
+                <div class="pattern-label">전체 홀수 비율</div>
+            </div>
+            
+            <div class="pattern-card">
+                <div class="pattern-value">{{ pattern_summary.consecutive_insights.max_ascending_sequence }}</div>
+                <div class="pattern-label">최대 상승 연속</div>
+            </div>
+            
+            <div class="pattern-card">
+                <div class="pattern-value">{{ pattern_summary.gap_insights.most_common_adjacent_gap[0] }}</div>
+                <div class="pattern-label">가장 흔한 간격</div>
+            </div>
+        </div>
+        
+        <div class="insight-box">
+            <h4>💡 주요 발견사항</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                {% for finding in pattern_summary.key_findings %}
+                    <li style="margin-bottom: 8px;">{{ finding }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 패턴 분석 탭 -->
+    <div class="pattern-tabs">
+        <button class="pattern-tab active" onclick="showPatternTab('odd-even')">🔢 홀짝 패턴</button>
+        <button class="pattern-tab" onclick="showPatternTab('consecutive')">📈 연속 패턴</button>
+        <button class="pattern-tab" onclick="showPatternTab('gaps')">📏 간격 패턴</button>
+        <button class="pattern-tab" onclick="showPatternTab('charts')">📊 패턴 차트</button>
+    </div>
+    
+    <div class="pattern-content">
+        <!-- 홀짝 패턴 탭 -->
+        <div id="odd-even" class="pattern-pane active">
+            <h3>🔢 홀수/짝수 분포 패턴</h3>
+            
+            {% if odd_even_patterns %}
+                <div class="pattern-grid">
+                    <div class="card">
+                        <h4>전체 홀짝 분포</h4>
+                        <div class="pattern-grid">
+                            <div class="pattern-card">
+                                <div class="pattern-value">{{ odd_even_patterns.overall_stats.total_odd }}</div>
+                                <div class="pattern-label">총 홀수 개수</div>
+                            </div>
+                            <div class="pattern-card">
+                                <div class="pattern-value">{{ odd_even_patterns.overall_stats.total_even }}</div>
+                                <div class="pattern-label">총 짝수 개수</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>자리별 홀짝 분포</h4>
+                        <div class="pattern-list">
+                            {% for pos, data in odd_even_patterns.by_position.items() %}
+                                {% set total = data.odd + data.even %}
+                                {% set odd_pct = (data.odd / total * 100) | round(1) %}
+                                <div class="pattern-item">
+                                    <span><strong>{{ pos.replace('pos_', '').replace('_', '') }}자리:</strong> 홀수 {{ odd_pct }}%</span>
+                                    <span>{{ data.odd }}:{{ data.even }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>상위 홀짝 패턴 (O:홀수, E:짝수)</h4>
+                    <div class="pattern-list">
+                        {% for pattern, count in odd_even_patterns.pattern_counts.items() %}
+                            {% if loop.index <= 15 %}
+                                <div class="pattern-item">
+                                    <span><strong>{{ pattern }}</strong></span>
+                                    <span>{{ count }}회</span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    홀짝 패턴 데이터가 없습니다. 패턴 분석을 실행해주세요.
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- 연속 패턴 탭 -->
+        <div id="consecutive" class="pattern-pane">
+            <h3>📈 연속 패턴 분석</h3>
+            
+            {% if consecutive_patterns %}
+                <div class="pattern-grid">
+                    <div class="card">
+                        <h4>상승 연속 패턴</h4>
+                        <div class="pattern-list">
+                            {% for length, count in consecutive_patterns.ascending_sequences.items() %}
+                                <div class="pattern-item">
+                                    <span><strong>{{ length }}자리 연속 상승</strong></span>
+                                    <span>{{ count }}회</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>하강 연속 패턴</h4>
+                        <div class="pattern-list">
+                            {% for length, count in consecutive_patterns.descending_sequences.items() %}
+                                <div class="pattern-item">
+                                    <span><strong>{{ length }}자리 연속 하강</strong></span>
+                                    <span>{{ count }}회</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>동일 숫자 연속</h4>
+                        <div class="pattern-list">
+                            {% for length, count in consecutive_patterns.same_digit_sequences.items() %}
+                                <div class="pattern-item">
+                                    <span><strong>{{ length }}자리 동일 숫자</strong></span>
+                                    <span>{{ count }}회</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>인접 간격 분포</h4>
+                        <div class="pattern-list">
+                            {% for gap, count in consecutive_patterns.gap_patterns.items() %}
+                                {% if loop.index <= 10 %}
+                                    <div class="pattern-item">
+                                        <span><strong>간격 {{ gap }}</strong></span>
+                                        <span>{{ count }}회</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    연속 패턴 데이터가 없습니다. 패턴 분석을 실행해주세요.
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- 간격 패턴 탭 -->
+        <div id="gaps" class="pattern-pane">
+            <h3>📏 숫자 간격 패턴</h3>
+            
+            {% if gap_patterns %}
+                <div class="pattern-grid">
+                    <div class="card">
+                        <h4>인접 숫자 간격 분포</h4>
+                        <div class="pattern-list">
+                            {% for gap, count in gap_patterns.adjacent_gaps.items() | sort(attribute='1', reverse=true) %}
+                                {% if loop.index <= 10 %}
+                                    <div class="pattern-item">
+                                        <span><strong>간격 {{ gap }}</strong></span>
+                                        <span>{{ count }}회</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>자리별 간격 패턴</h4>
+                        {% for pos, gaps in gap_patterns.position_gaps.items() %}
+                            <div style="margin-bottom: 15px;">
+                                <strong>{{ pos.replace('pos', '').replace('-', '→') }}:</strong>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px;">
+                                    {% for gap, count in gaps.items() | sort(attribute='1', reverse=true) %}
+                                        {% if loop.index <= 5 %}
+                                            <span style="background: #e9ecef; padding: 2px 8px; border-radius: 4px; font-size: 0.8em;">
+                                                {{ gap }}({{ count }})
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>간격 통계</h4>
+                    <div class="pattern-grid">
+                        <div class="pattern-card">
+                            <div class="pattern-value">{{ "%.1f"|format(gap_patterns.by_round | map(attribute='max_gap') | list | average) }}</div>
+                            <div class="pattern-label">평균 최대 간격</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-value">{{ "%.1f"|format(gap_patterns.by_round | map(attribute='min_gap') | list | average) }}</div>
+                            <div class="pattern-label">평균 최소 간격</div>
+                        </div>
+                        <div class="pattern-card">
+                            <div class="pattern-value">{{ "%.1f"|format(gap_patterns.by_round | map(attribute='avg_gap') | list | average) }}</div>
+                            <div class="pattern-label">전체 평균 간격</div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    간격 패턴 데이터가 없습니다. 패턴 분석을 실행해주세요.
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- 패턴 차트 탭 -->
+        <div id="charts" class="pattern-pane">
+            <h3>📊 패턴 분석 차트</h3>
+            
+            <div class="pattern-grid">
+                <div class="chart-preview">
+                    <h4>홀짝 패턴 분석</h4>
+                    <img src="{{ url_for('serve_chart', filename='pattern_analysis.png') }}?v={{ moment().format('X') if moment else '' }}" 
+                         alt="홀짝 패턴 분석"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 6px; color: #6c757d;">
+                        차트를 생성하려면 패턴 분석을 실행해주세요.
+                    </div>
+                </div>
+                
+                <div class="chart-preview">
+                    <h4>간격 패턴 분석</h4>
+                    <img src="{{ url_for('serve_chart', filename='gap_analysis.png') }}?v={{ moment().format('X') if moment else '' }}" 
+                         alt="간격 패턴 분석"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 6px; color: #6c757d;">
+                        차트를 생성하려면 패턴 분석을 실행해주세요.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% else %}
+    <div class="card">
+        <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 4em; margin-bottom: 20px;">🔍</div>
+            <h3>패턴 분석 데이터가 없습니다</h3>
+            <p style="color: #6c757d; margin: 20px 0;">고급 패턴 분석을 실행하여 상세한 패턴 정보를 확인하세요.</p>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn btn-primary" onclick="executeAction('pattern_analyze')">
+                    🔍 패턴 분석 실행
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    🏠 메인으로 돌아가기
+                </a>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                <h4>패턴 분석이 제공하는 정보:</h4>
+                <ul style="text-align: left; margin-top: 15px;">
+                    <li>홀수/짝수 분포 패턴</li>
+                    <li>연속 상승/하강 패턴</li>
+                    <li>숫자 간격 패턴</li>
+                    <li>조와 번호의 조합 패턴</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 패턴 탭 전환 함수
+function showPatternTab(tabName) {
+    // 모든 탭과 내용 숨기기
+    document.querySelectorAll('.pattern-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.pattern-pane').forEach(pane => pane.classList.remove('active'));
+    
+    // 선택된 탭과 내용 보이기
+    event.target.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+
+// Jinja2 필터 정의 (JavaScript에서 사용)
+function average(arr) {
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,190 @@
+<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#f5f5f5"/>
+
+  <!-- Header -->
+  <rect x="20" y="20" width="1360" height="100" rx="15" fill="url(#headerGrad)" filter="url(#shadow)"/>
+  <text x="700" y="60" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">🎯 당첨번호 출현 횟수 분석</text>
+  <text x="700" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" opacity="0.9">실제 6자리 당첨번호들의 출현 빈도 분석</text>
+
+  <!-- Tab Navigation -->
+  <rect x="20" y="140" width="1360" height="50" rx="10 10 0 0" fill="white" filter="url(#shadow)"/>
+
+  <rect x="60" y="150" width="100" height="30" rx="5" fill="#f8f9fa"/>
+  <text x="110" y="170" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="14">📊 개요</text>
+
+  <rect x="170" y="150" width="120" height="30" rx="5" fill="#f8f9fa"/>
+  <text x="230" y="170" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="14">🔢 출현 빈도</text>
+
+  <rect x="300" y="150" width="120" height="30" rx="5" fill="white" stroke="#007bff" stroke-width="2"/>
+  <text x="360" y="170" text-anchor="middle" fill="#007bff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">🎯 당첨번호</text>
+
+  <rect x="430" y="150" width="120" height="30" rx="5" fill="#f8f9fa"/>
+  <text x="490" y="170" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="14">🤝 동반 출현</text>
+
+  <rect x="560" y="150" width="100" height="30" rx="5" fill="#f8f9fa"/>
+  <text x="610" y="170" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="14">📈 트렌드</text>
+
+  <!-- Main Content Area -->
+  <rect x="20" y="190" width="1360" height="680" rx="0 0 10 10" fill="white" filter="url(#shadow)"/>
+
+  <!-- Content Title -->
+  <text x="50" y="230" fill="#495057" font-family="Arial, sans-serif" font-size="20" font-weight="bold">🎯 당첨번호 출현 분석</text>
+
+  <!-- Statistics Cards -->
+  <g transform="translate(50, 250)">
+    <!-- Total Unique Numbers -->
+    <rect x="0" y="0" width="160" height="100" rx="10" fill="url(#cardGrad)" stroke="#007bff" stroke-width="2" filter="url(#shadow)"/>
+    <text x="80" y="35" text-anchor="middle" fill="#007bff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">1,234</text>
+    <text x="80" y="55" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="12">총 서로 다른 번호</text>
+    <text x="80" y="75" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">모든 회차에서</text>
+    <text x="80" y="88" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">출현한 번호 수</text>
+
+    <!-- Duplicated Numbers -->
+    <rect x="180" y="0" width="160" height="100" rx="10" fill="url(#cardGrad)" stroke="#28a745" stroke-width="2" filter="url(#shadow)"/>
+    <text x="260" y="35" text-anchor="middle" fill="#28a745" font-family="Arial, sans-serif" font-size="24" font-weight="bold">23</text>
+    <text x="260" y="55" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="12">중복 출현 번호</text>
+    <text x="260" y="75" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">2회 이상 나온</text>
+    <text x="260" y="88" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">당첨번호 수</text>
+
+    <!-- Most Frequent Number -->
+    <rect x="360" y="0" width="160" height="100" rx="10" fill="url(#cardGrad)" stroke="#dc3545" stroke-width="2" filter="url(#shadow)"/>
+    <text x="440" y="35" text-anchor="middle" fill="#dc3545" font-family="Arial, sans-serif" font-size="18" font-weight="bold">123456</text>
+    <text x="440" y="55" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="12">최다 출현 번호</text>
+    <text x="440" y="75" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">가장 많이 나온</text>
+    <text x="440" y="88" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">당첨번호</text>
+
+    <!-- Frequency Count -->
+    <rect x="540" y="0" width="160" height="100" rx="10" fill="url(#cardGrad)" stroke="#ffc107" stroke-width="2" filter="url(#shadow)"/>
+    <text x="620" y="35" text-anchor="middle" fill="#ff8800" font-family="Arial, sans-serif" font-size="24" font-weight="bold">4</text>
+    <text x="620" y="55" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="12">출현 횟수</text>
+    <text x="620" y="75" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">최다 출현 번호의</text>
+    <text x="620" y="88" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">출현 횟수</text>
+  </g>
+
+  <!-- Duplicated Numbers List -->
+  <g transform="translate(50, 370)">
+    <rect x="0" y="0" width="680" height="250" rx="10" fill="url(#cardGrad)" stroke="#dee2e6" filter="url(#shadow)"/>
+    <text x="20" y="30" fill="#495057" font-family="Arial, sans-serif" font-size="16" font-weight="bold">중복 출현 당첨번호 목록</text>
+
+    <rect x="20" y="40" width="640" height="190" rx="5" fill="#f8f9fa" stroke="#dee2e6"/>
+
+    <!-- List items -->
+    <rect x="30" y="50" width="620" height="25" rx="3" fill="white" stroke="#28a745" stroke-width="1"/>
+    <text x="40" y="68" fill="#333" font-family="Courier, monospace" font-size="14" font-weight="bold">123456</text>
+    <rect x="580" y="57" width="30" height="12" rx="6" fill="#007bff"/>
+    <text x="595" y="66" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">4회</text>
+
+    <rect x="30" y="80" width="620" height="25" rx="3" fill="#f8f9fa"/>
+    <text x="40" y="98" fill="#333" font-family="Courier, monospace" font-size="14" font-weight="bold">234567</text>
+    <rect x="580" y="87" width="30" height="12" rx="6" fill="#007bff"/>
+    <text x="595" y="96" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">3회</text>
+
+    <rect x="30" y="110" width="620" height="25" rx="3" fill="white"/>
+    <text x="40" y="128" fill="#333" font-family="Courier, monospace" font-size="14" font-weight="bold">345678</text>
+    <rect x="580" y="117" width="30" height="12" rx="6" fill="#007bff"/>
+    <text x="595" y="126" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">3회</text>
+
+    <rect x="30" y="140" width="620" height="25" rx="3" fill="#f8f9fa"/>
+    <text x="40" y="158" fill="#333" font-family="Courier, monospace" font-size="14" font-weight="bold">456789</text>
+    <rect x="580" y="147" width="30" height="12" rx="6" fill="#007bff"/>
+    <text x="595" y="156" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">2회</text>
+
+    <rect x="30" y="170" width="620" height="25" rx="3" fill="white"/>
+    <text x="40" y="188" fill="#333" font-family="Courier, monospace" font-size="14" font-weight="bold">567890</text>
+    <rect x="580" y="177" width="30" height="12" rx="6" fill="#007bff"/>
+    <text x="595" y="186" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">2회</text>
+
+    <rect x="30" y="200" width="620" height="25" rx="3" fill="#f8f9fa"/>
+    <text x="40" y="218" fill="#333" font-family="Courier, monospace" font-size="14" font-weight="bold">678901</text>
+    <rect x="580" y="207" width="30" height="12" rx="6" fill="#007bff"/>
+    <text x="595" y="216" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">2회</text>
+
+    <text x="340" y="245" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="11">... 총 23개의 중복 출현 번호</text>
+  </g>
+
+  <!-- Chart Preview -->
+  <g transform="translate(750, 250)">
+    <rect x="0" y="0" width="580" height="370" rx="10" fill="white" stroke="#dee2e6" filter="url(#shadow)"/>
+    <text x="290" y="30" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="16" font-weight="bold">당첨번호 출현 빈도 차트 (상위 20개)</text>
+
+    <!-- Bar Chart -->
+    <g transform="translate(30, 60)">
+      <!-- Bars representing winning number frequencies -->
+      <rect x="0" y="240" width="25" height="40" fill="#007bff"/>
+      <rect x="27" y="250" width="25" height="30" fill="#28a745"/>
+      <rect x="54" y="255" width="25" height="25" fill="#ffc107"/>
+      <rect x="81" y="255" width="25" height="25" fill="#dc3545"/>
+      <rect x="108" y="260" width="25" height="20" fill="#6c757d"/>
+      <rect x="135" y="260" width="25" height="20" fill="#e83e8c"/>
+      <rect x="162" y="265" width="25" height="15" fill="#fd7e14"/>
+      <rect x="189" y="265" width="25" height="15" fill="#20c997"/>
+      <rect x="216" y="270" width="25" height="10" fill="#6f42c1"/>
+      <rect x="243" y="270" width="25" height="10" fill="#495057"/>
+      <rect x="270" y="275" width="25" height="5" fill="#17a2b8"/>
+      <rect x="297" y="275" width="25" height="5" fill="#f8f9fa"/>
+      <rect x="324" y="275" width="25" height="5" fill="#e9ecef"/>
+      <rect x="351" y="275" width="25" height="5" fill="#dee2e6"/>
+      <rect x="378" y="275" width="25" height="5" fill="#ced4da"/>
+      <rect x="405" y="275" width="25" height="5" fill="#adb5bd"/>
+      <rect x="432" y="275" width="25" height="5" fill="#6c757d"/>
+      <rect x="459" y="275" width="25" height="5" fill="#495057"/>
+      <rect x="486" y="275" width="25" height="5" fill="#343a40"/>
+      <rect x="513" y="275" width="25" height="5" fill="#212529"/>
+
+      <!-- X-axis labels -->
+      <text x="12" y="295" text-anchor="middle" fill="#6c757d" font-family="Courier, monospace" font-size="8">123456</text>
+      <text x="39" y="295" text-anchor="middle" fill="#6c757d" font-family="Courier, monospace" font-size="8">234567</text>
+      <text x="66" y="295" text-anchor="middle" fill="#6c757d" font-family="Courier, monospace" font-size="8">345678</text>
+      <text x="93" y="295" text-anchor="middle" fill="#6c757d" font-family="Courier, monospace" font-size="8">456789</text>
+      <text x="120" y="295" text-anchor="middle" fill="#6c757d" font-family="Courier, monospace" font-size="8">567890</text>
+
+      <!-- Y-axis -->
+      <line x1="0" y1="50" x2="0" y2="280" stroke="#333" stroke-width="1"/>
+      <text x="-10" y="55" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">4</text>
+      <text x="-10" y="105" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">3</text>
+      <text x="-10" y="155" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">2</text>
+      <text x="-10" y="205" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">1</text>
+      <text x="-10" y="280" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">0</text>
+
+      <!-- Value labels on top of bars -->
+      <text x="12" y="235" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">4</text>
+      <text x="39" y="245" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">3</text>
+      <text x="66" y="250" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">3</text>
+      <text x="93" y="250" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">3</text>
+      <text x="120" y="255" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">2</text>
+    </g>
+
+    <!-- Chart Note -->
+    <text x="20" y="340" fill="#6c757d" font-family="Arial, sans-serif" font-size="11" font-style="italic">※ 실제 당첨번호들의 출현 횟수를 분석한 결과입니다.</text>
+    <text x="20" y="355" fill="#6c757d" font-family="Arial, sans-serif" font-size="11" font-style="italic">   대부분의 번호는 1회씩만 출현하며, 일부만 중복 출현합니다.</text>
+  </g>
+
+  <!-- Key Insights Box -->
+  <g transform="translate(50, 640)">
+    <rect x="0" y="0" width="1280" height="80" rx="10" fill="#e3f2fd" stroke="#2196f3" filter="url(#shadow)"/>
+    <text x="20" y="25" fill="#1976d2" font-family="Arial, sans-serif" font-size="14" font-weight="bold">💡 주요 발견사항</text>
+
+    <text x="30" y="45" fill="#1976d2" font-family="Arial, sans-serif" font-size="12">• 전체 1,234개의 서로 다른 당첨번호가 출현했으며, 그 중 23개만 2회 이상 중복 출현했습니다.</text>
+    <text x="30" y="60" fill="#1976d2" font-family="Arial, sans-serif" font-size="12">• 가장 많이 나온 당첨번호는 '123456'으로 총 4회 출현했습니다. 이는 매우 드문 현상입니다.</text>
+    <text x="30" y="75" fill="#1976d2" font-family="Arial, sans-serif" font-size="12">• 대부분의 당첨번호(98.1%)는 단 1회만 출현하여 연금복권의 높은 랜덤성을 보여줍니다.</text>
+  </g>
+
+  <!-- Note -->
+  <rect x="50" y="750" width="1300" height="40" rx="5" fill="#fff3cd" stroke="#ffeaa7"/>
+  <text x="70" y="775" fill="#856404" font-family="Arial, sans-serif" font-size="12">⚠️ 이 분석은 과거 데이터에 기반한 통계적 정보이며, 미래 당첨을 예측하거나 보장하지 않습니다. 참고용으로만 활용하세요.</text>
+</svg>

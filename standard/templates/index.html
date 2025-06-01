@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}연금복권 패턴 분석 - 메인{% endblock %}
+
+{% block content %}
+<div class="grid">
+    <!-- 시스템 상태 카드 -->
+    <div class="card">
+        <h3>📊 시스템 상태</h3>
+        <div id="system-status">
+            {% if status %}
+                <div class="status-item">
+                    <strong>크롤링 데이터:</strong> 
+                    {% if status.crawl_data_exists %}
+                        <span style="color: #28a745;">✅ 있음</span>
+                        {% if status.last_crawl %}
+                            <small>(최종: {{ status.last_crawl }})</small>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 없음</span>
+                    {% endif %}
+                </div>
+                
+                <div class="status-item" style="margin-top: 10px;">
+                    <strong>기본 분석:</strong>
+                    {% if status.basic_analysis_exists %}
+                        <span style="color: #28a745;">✅ 완료</span>
+                        {% if status.last_analysis %}
+                            <small>(최종: {{ status.last_analysis }})</small>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 미완료</span>
+                    {% endif %}
+                </div>
+                
+                <div class="status-item" style="margin-top: 10px;">
+                    <strong>번호별 분석:</strong>
+                    {% if status.number_analysis_exists %}
+                        <span style="color: #28a745;">✅ 완료</span>
+                        {% if status.last_number_analysis %}
+                            <small>(최종: {{ status.last_number_analysis }})</small>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 미완료</span>
+                    {% endif %}
+                </div>
+                
+                {% if status.running_tasks > 0 %}
+                    <div class="status-item" style="margin-top: 10px; color: #007bff;">
+                        <strong>🔄 실행 중인 작업:</strong> {{ status.running_tasks }}개
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>상태 정보를 불러오는 중...</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- 빠른 실행 패널 -->
+    <div class="card">
+        <h3>🚀 빠른 실행</h3>
+        <p>각 단계를 순서대로 실행하세요:</p>
+        
+        <div style="margin: 20px 0;">
+            <div style="margin-bottom: 15px;">
+                <strong>1단계:</strong> 데이터 수집
+                <div style="margin-top: 5px;">
+                    <button class="btn btn-primary" onclick="executeAction('crawl')">
+                        🕷️ 데이터 크롤링
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <strong>2단계:</strong> 기본 분석
+                <div style="margin-top: 5px;">
+                    <button class="btn btn-success" onclick="executeAction('analyze')">
+                        📈 기본 분석 실행
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <strong>3단계:</strong> 고급 분석
+                <div style="margin-top: 5px;">
+                    <button class="btn btn-info" onclick="executeAction('number_analyze')">
+                        🔢 번호별 분석 실행
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div style="border-top: 1px solid #e9ecef; padding-top: 15px; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="refreshStatus()">
+                🔄 상태 새로고침
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 기본 통계 정보 -->
+{% if basic_stats and number_summary %}
+<div class="grid">
+    <div class="card">
+        <h3>📊 기본 통계</h3>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">{{ "{:,}".format(basic_stats.total_rounds) if basic_stats.total_rounds else 'N/A' }}</div>
+                <div class="stat-label">총 회차</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-value">{{ basic_stats.most_frequent_jo.jo if basic_stats.most_frequent_jo else 'N/A' }}</div>
+                <div class="stat-label">최다 출현 조</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-value">{{ number_summary.frequency_analysis.most_frequent_second[0] if number_summary.frequency_analysis.most_frequent_second else 'N/A' }}</div>
+                <div class="stat-label">2등 최다 출현</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-value">{{ number_summary.frequency_analysis.most_frequent_second[1] if number_summary.frequency_analysis.most_frequent_second else 'N/A' }}</div>
+                <div class="stat-label">출현 횟수</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <p><strong>데이터 범위:</strong> {{ number_summary.analysis_summary.data_range if number_summary.analysis_summary else 'N/A' }}</p>
+            <p><strong>최종 분석:</strong> 
+                {% if number_summary.analysis_summary.analysis_date %}
+                    {{ number_summary.analysis_summary.analysis_date[:19].replace('T', ' ') }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>💡 주요 인사이트</h3>
+        {% if number_summary and number_summary.companion_analysis.insights %}
+            <ul style="padding-left: 20px;">
+                {% for insight in number_summary.companion_analysis.insights %}
+                    <li style="margin-bottom: 8px;">{{ insight }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>인사이트를 표시하려면 번호별 분석을 실행해주세요.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 최근 분석 차트 미리보기 -->
+<div class="card">
+    <h3>📈 최근 분석 결과 미리보기</h3>
+    <div class="grid">
+        {% set chart_files = [
+            ('jo_frequency.png', '조별 출현 빈도'),
+            ('number_frequency_by_position.png', '자리별 숫자 출현 빈도'),
+            ('number_trends.png', '번호별 트렌드 점수')
+        ] %}
+        
+        {% for filename, title in chart_files %}
+            {% set chart_path = 'charts/' + filename %}
+            <div style="text-align: center;">
+                <h4 style="margin-bottom: 10px;">{{ title }}</h4>
+                <img src="{{ url_for('serve_chart', filename=filename) }}?v={{ moment().format('X') if moment else '' }}" 
+                     alt="{{ title }}" 
+                     style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 6px; color: #6c757d;">
+                    차트를 생성하려면 분석을 실행해주세요.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            📊 전체 대시보드 보기
+        </a>
+    </div>
+</div>
+
+{% else %}
+<div class="card">
+    <h3>🎯 시작하기</h3>
+    <div class="alert alert-info">
+        <strong>환영합니다!</strong> 연금복권 패턴 분석을 시작하려면 다음 단계를 따르세요:
+        <ol style="margin-top: 15px; padding-left: 25px;">
+            <li><strong>데이터 크롤링:</strong> 동행복권 사이트에서 연금복권 데이터를 수집합니다.</li>
+            <li><strong>기본 분석:</strong> 조별 출현 빈도, 트렌드 등 기본적인 패턴을 분석합니다.</li>
+            <li><strong>번호별 분석:</strong> 각 자리별 숫자 출현 빈도, 동반 출현 패턴을 분석합니다.</li>
+        </ol>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.stat-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.status-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.status-item:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 상태 새로고침 함수
+function refreshStatus() {
+    fetch('/api/status')
+    .then(response => response.json())
+    .then(data => {
+        updateStatusDisplay(data);
+        showAlert('상태가 업데이트되었습니다.', 'success');
+    })
+    .catch(error => {
+        showAlert('상태 업데이트에 실패했습니다: ' + error.message, 'error');
+    });
+}
+
+// 상태 표시 업데이트
+function updateStatusDisplay(status) {
+    const statusContainer = document.getElementById('system-status');
+    if (!statusContainer) return;
+    
+    const formatTime = (timeStr) => timeStr ? `(최종: ${timeStr})` : '';
+    
+    statusContainer.innerHTML = `
+        <div class="status-item">
+            <strong>크롤링 데이터:</strong> 
+            ${status.crawl_data_exists ? 
+                `<span style="color: #28a745;">✅ 있음</span> <small>${formatTime(status.last_crawl)}</small>` :
+                `<span style="color: #dc3545;">❌ 없음</span>`
+            }
+        </div>
+        <div class="status-item" style="margin-top: 10px;">
+            <strong>기본 분석:</strong>
+            ${status.basic_analysis_exists ? 
+                `<span style="color: #28a745;">✅ 완료</span> <small>${formatTime(status.last_analysis)}</small>` :
+                `<span style="color: #dc3545;">❌ 미완료</span>`
+            }
+        </div>
+        <div class="status-item" style="margin-top: 10px;">
+            <strong>번호별 분석:</strong>
+            ${status.number_analysis_exists ? 
+                `<span style="color: #28a745;">✅ 완료</span> <small>${formatTime(status.last_number_analysis)}</small>` :
+                `<span style="color: #dc3545;">❌ 미완료</span>`
+            }
+        </div>
+        ${status.running_tasks > 0 ? 
+            `<div class="status-item" style="margin-top: 10px; color: #007bff;">
+                <strong>🔄 실행 중인 작업:</strong> ${status.running_tasks}개
+            </div>` : ''
+        }
+    `;
+}
+
+// 페이지 로드 시 자동 상태 확인
+document.addEventListener('DOMContentLoaded', function() {
+    // 5분마다 자동으로 상태 확인
+    setInterval(refreshStatus, 300000);
+});
+</script>
+{% endblock %}
