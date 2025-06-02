@@ -25,8 +25,13 @@ plt.rcParams['axes.unicode_minus'] = False
 
 
 class NumberAnalyzer:
-    def __init__(self, data_file='lottery_data/pension_lottery_all.csv'):
+    def __init__(self, lottery_type="720", data_file=None):
         """번호 분석기 초기화"""
+        self.lottery_type = lottery_type
+
+        if data_file is None:
+            data_file = f'lottery_data/pension_lottery_{lottery_type}_all.csv'
+
         self.data_file = data_file
         self.data = None
         self.results_dir = 'analysis_results'
@@ -267,48 +272,73 @@ class NumberAnalyzer:
         self.logger.info("번호별 출현 빈도 차트 생성 완료")
 
     def create_companion_heatmap(self, companion_data):
-        """동반 출현 히트맵 생성"""
+        """동반 출현 히트맵 생성 (수정된 버전)"""
         self.logger.info("동반 출현 히트맵 생성 시작")
 
         # 각 자리별로 히트맵 생성
         for pos in range(1, 7):
-            # 해당 자리의 동반 출현 데이터 추출
-            pos_data = defaultdict(lambda: defaultdict(int))
+            try:
+                # 해당 자리의 동반 출현 데이터 추출
+                pos_data = defaultdict(lambda: defaultdict(int))
 
-            for key, companions in companion_data['companion_data'].items():
-                if key.startswith(f"자리{pos}_"):
-                    digit = key.split('_')[1]
-                    for comp_key, count in companions.items():
-                        comp_pos, comp_digit = comp_key.split('_')
-                        pos_data[digit][comp_digit] += count
+                for key, companions in companion_data['companion_data'].items():
+                    if key.startswith(f"자리{pos}_"):
+                        digit = key.split('_')[1]
+                        for comp_key, count in companions.items():
+                            comp_parts = comp_key.split('_')
+                            if len(comp_parts) >= 2:
+                                comp_digit = comp_parts[1]
+                                pos_data[digit][comp_digit] += count
 
-            if pos_data:
-                # 히트맵용 매트릭스 생성
-                digits = sorted(set(list(pos_data.keys()) +
-                                    [d for subdict in pos_data.values() for d in subdict.keys()]))
+                if pos_data:
+                    # 히트맵용 매트릭스 생성
+                    all_digits = set()
+                    for d1_dict in pos_data.values():
+                        all_digits.update(d1_dict.keys())
+                    all_digits.update(pos_data.keys())
 
-                matrix = np.zeros((len(digits), len(digits)))
-                for i, d1 in enumerate(digits):
-                    for j, d2 in enumerate(digits):
-                        if d1 in pos_data and d2 in pos_data[d1]:
-                            matrix[i][j] = pos_data[d1][d2]
+                    digits = sorted(list(all_digits))
 
-                # 히트맵 생성
-                plt.figure(figsize=(10, 8))
-                sns.heatmap(matrix,
-                            xticklabels=digits,
-                            yticklabels=digits,
-                            annot=True,
-                            fmt='g',
-                            cmap='YlOrRd',
-                            cbar_kws={'label': '동반 출현 횟수'})
+                    if len(digits) > 0:
+                        matrix = np.zeros((len(digits), len(digits)))
+                        for i, d1 in enumerate(digits):
+                            for j, d2 in enumerate(digits):
+                                if d1 in pos_data and d2 in pos_data[d1]:
+                                    matrix[i][j] = pos_data[d1][d2]
 
-                plt.title(f'{pos}자리 숫자별 동반 출현 빈도', fontsize=14, fontweight='bold')
-                plt.xlabel('동반 출현 숫자')
-                plt.ylabel('기준 숫자')
-                plt.tight_layout()
-                plt.savefig(f'{self.charts_dir}/companion_heatmap_pos{pos}.png', dpi=300, bbox_inches='tight')
-                plt.close()
+                        # 히트맵 생성
+                        plt.figure(figsize=(10, 8))
+
+                        # 데이터가 있는 경우에만 히트맵 생성
+                        if matrix.max() > 0:
+                            sns.heatmap(matrix,
+                                        xticklabels=digits,
+                                        yticklabels=digits,
+                                        annot=True,
+                                        fmt='g',
+                                        cmap='YlOrRd',
+                                        cbar_kws={'label': '동반 출현 횟수'})
+                        else:
+                            # 데이터가 없는 경우 빈 히트맵
+                            plt.text(0.5, 0.5, f'{pos}자리 동반 출현 데이터 없음',
+                                     ha='center', va='center', transform=plt.gca().transAxes,
+                                     fontsize=16, color='gray')
+
+                        plt.title(f'{pos}자리 숫자별 동반 출현 빈도', fontsize=14, fontweight='bold')
+                        plt.xlabel('동반 출현 숫자')
+                        plt.ylabel('기준 숫자')
+                        plt.tight_layout()
+                        plt.savefig(f'{self.charts_dir}/companion_heatmap_pos{pos}.png',
+                                    dpi=300, bbox_inches='tight')
+                        plt.close()
+                    else:
+                        self.logger.warning(f"{pos}자리 동반 출현 데이터가 없습니다.")
+                else:
+                    self.logger.warning(f"{pos}자리 동반 출현 데이터가 없습니다.")
+
+            except Exception as e:
+                self.logger.error(f"{pos}자리 히트맵 생성 실패: {e}")
+                plt.close()  # 오류 시 플롯 정리
 
         self.logger.info("동반 출현 히트맵 생성 완료")
 

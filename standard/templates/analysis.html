@@ -1,10 +1,610 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}연금복권 패턴 분석 - 분석 실행{% endblock %}
+
+{% block header_title %}🔬 분석 실행 센터{% endblock %}
+{% block header_subtitle %}단계별 분석 실행 및 진행 상황 모니터링{% endblock %}
+
+{% block head %}
+<style>
+    .analysis-section {
+        margin-bottom: 30px;
+    }
+    
+    .analysis-step {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-left: 4px solid #6c757d;
+        transition: all 0.3s ease;
+    }
+    
+    .analysis-step.completed {
+        border-left-color: #28a745;
+    }
+    
+    .analysis-step.running {
+        border-left-color: #007bff;
+        animation: pulse 2s infinite;
+    }
+    
+    .analysis-step.error {
+        border-left-color: #dc3545;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        50% { box-shadow: 0 4px 8px rgba(0,123,255,0.3); }
+        100% { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    }
+    
+    .step-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .step-title {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .step-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
+    
+    .status-running {
+        background-color: #cce7ff;
+        color: #0066cc;
+    }
+    
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .step-description {
+        color: #6c757d;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+    
+    .step-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .progress-section {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .progress-container {
+        margin: 15px 0;
+    }
+    
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+    
+    .log-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .log-container {
+        max-height: 300px;
+        overflow-y: auto;
+        background: #212529;
+        color: #ffffff;
+        padding: 15px;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        line-height: 1.4;
+    }
+    
+    .log-entry {
+        margin-bottom: 5px;
+        word-wrap: break-word;
+    }
+    
+    .log-timestamp {
+        color: #6c757d;
+        margin-right: 8px;
+    }
+    
+    .log-level-info {
+        color: #17a2b8;
+    }
+    
+    .log-level-warning {
+        color: #ffc107;
+    }
+    
+    .log-level-error {
+        color: #dc3545;
+    }
+    
+    .log-level-success {
+        color: #28a745;
+    }
+    
+    .results-preview {
+        margin-top: 20px;
+        padding: 15px;
+        background: #e3f2fd;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+    }
+    
+    .results-preview h5 {
+        color: #1976d2;
+        margin-bottom: 10px;
+    }
+    
+    .file-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .file-list li {
+        padding: 5px 0;
+        color: #333;
+    }
+    
+    .file-list li::before {
+        content: "📄 ";
+        margin-right: 5px;
+    }
+    
+    .quick-actions {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .quick-actions h3 {
+        color: white;
+        margin-bottom: 15px;
+    }
+    
+    .quick-actions .btn {
+        margin: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 빠른 실행 패널 -->
+<div class="quick-actions">
+    <h3>🚀 빠른 실행</h3>
+    <p>원하는 분석을 선택하여 실행하세요. 각 단계는 순서대로 실행하는 것을 권장합니다.</p>
+    <div>
+        <button class="btn btn-primary" onclick="executeAction('crawl')">
+            🕷️ 1단계: 데이터 크롤링
+        </button>
+        <button class="btn btn-success" onclick="executeAction('analyze')">
+            📈 2단계: 기본 분석
+        </button>
+        <button class="btn btn-info" onclick="executeAction('number_analyze')">
+            🔢 3단계: 번호별 분석
+        </button>
+        <button class="btn btn-secondary" onclick="executeAction('pattern_analyze')">
+            🔍 4단계: 패턴 분석
+        </button>
+    </div>
+</div>
+
+<!-- 진행 상황 -->
+<div class="progress-section" id="progress-section" style="display: none;">
+    <h3>📊 진행 상황</h3>
+    <div class="progress-container">
+        <div class="progress-label">
+            <span id="progress-message">대기 중...</span>
+            <span id="progress-percentage">0%</span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar" style="width: 0%;">0%</div>
+        </div>
+    </div>
+    <div id="current-task-info">
+        <small class="text-muted">작업 ID: <span id="current-task-id">-</span></small>
+    </div>
+</div>
+
+<!-- 분석 단계 -->
+<div class="analysis-section">
+    <h3>📋 분석 단계별 현황</h3>
+    
+    <!-- 1단계: 데이터 크롤링 -->
+    <div class="analysis-step" id="step-crawl">
+        <div class="step-header">
+            <div class="step-title">
+                <span>🕷️</span>
+                <span>1단계: 데이터 크롤링</span>
+            </div>
+            <div class="step-status status-pending" id="status-crawl">대기</div>
+        </div>
+        <div class="step-description">
+            동행복권 사이트에서 연금복권 당첨번호 데이터를 수집합니다. 
+            모든 회차의 데이터를 CSV와 JSON 형식으로 저장합니다.
+        </div>
+        <div class="step-actions">
+            <button class="btn btn-primary" onclick="executeAction('crawl')">
+                🕷️ 크롤링 실행
+            </button>
+            <small class="text-muted">예상 소요시간: 2-5분</small>
+        </div>
+        <div class="results-preview" id="results-crawl" style="display: none;">
+            <h5>📄 생성된 파일</h5>
+            <ul class="file-list">
+                <li>lottery_data/pension_lottery_all.csv</li>
+                <li>lottery_data/pension_lottery_all.json</li>
+                <li>logs/crawling_log_*.txt</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 2단계: 기본 분석 -->
+    <div class="analysis-step" id="step-analyze">
+        <div class="step-header">
+            <div class="step-title">
+                <span>📈</span>
+                <span>2단계: 기본 분석</span>
+            </div>
+            <div class="step-status status-pending" id="status-analyze">대기</div>
+        </div>
+        <div class="step-description">
+            수집된 데이터를 바탕으로 조별 출현 빈도, 최근 트렌드, 2등 끝자리 패턴을 분석합니다.
+        </div>
+        <div class="step-actions">
+            <button class="btn btn-success" onclick="executeAction('analyze')">
+                📈 기본 분석 실행
+            </button>
+            <small class="text-muted">예상 소요시간: 1-2분</small>
+        </div>
+        <div class="results-preview" id="results-analyze" style="display: none;">
+            <h5>📄 생성된 파일</h5>
+            <ul class="file-list">
+                <li>analysis_results/statistics_report.json</li>
+                <li>charts/jo_frequency.png</li>
+                <li>charts/recent_jo_frequency.png</li>
+                <li>charts/last_digit_frequency.png</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 3단계: 번호별 분석 -->
+    <div class="analysis-step" id="step-number">
+        <div class="step-header">
+            <div class="step-title">
+                <span>🔢</span>
+                <span>3단계: 번호별 분석</span>
+            </div>
+            <div class="step-status status-pending" id="status-number">대기</div>
+        </div>
+        <div class="step-description">
+            각 자리별 숫자 출현 빈도, 동반 출현 패턴, 트렌드 점수를 상세히 분석합니다.
+        </div>
+        <div class="step-actions">
+            <button class="btn btn-info" onclick="executeAction('number_analyze')">
+                🔢 번호별 분석 실행
+            </button>
+            <small class="text-muted">예상 소요시간: 2-3분</small>
+        </div>
+        <div class="results-preview" id="results-number" style="display: none;">
+            <h5>📄 생성된 파일</h5>
+            <ul class="file-list">
+                <li>analysis_results/number_frequency.json</li>
+                <li>analysis_results/companion_numbers.json</li>
+                <li>analysis_results/number_trends.json</li>
+                <li>charts/number_frequency_by_position.png</li>
+                <li>charts/companion_heatmap_pos*.png</li>
+                <li>charts/number_trends.png</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 4단계: 패턴 분석 -->
+    <div class="analysis-step" id="step-pattern">
+        <div class="step-header">
+            <div class="step-title">
+                <span>🔍</span>
+                <span>4단계: 패턴 분석</span>
+            </div>
+            <div class="step-status status-pending" id="status-pattern">대기</div>
+        </div>
+        <div class="step-description">
+            홀짝 분포, 연속 패턴, 숫자 간격 등 고급 패턴을 분석하여 숨겨진 경향을 찾습니다.
+        </div>
+        <div class="step-actions">
+            <button class="btn btn-secondary" onclick="executeAction('pattern_analyze')">
+                🔍 패턴 분석 실행
+            </button>
+            <small class="text-muted">예상 소요시간: 3-4분</small>
+        </div>
+        <div class="results-preview" id="results-pattern" style="display: none;">
+            <h5>📄 생성된 파일</h5>
+            <ul class="file-list">
+                <li>analysis_results/pattern_analysis_summary.json</li>
+                <li>analysis_results/odd_even_patterns.json</li>
+                <li>analysis_results/consecutive_patterns.json</li>
+                <li>charts/pattern_analysis.png</li>
+                <li>charts/gap_analysis.png</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 실시간 로그 -->
+<div class="log-section">
+    <h3>📝 실시간 로그</h3>
+    <div class="log-container" id="log-container">
+        <div class="log-entry">
+            <span class="log-timestamp">[시스템]</span>
+            <span class="log-level-info">분석 시스템이 준비되었습니다. 원하는 분석을 실행하세요.</span>
+        </div>
+    </div>
+</div>
+
+<!-- 결과 요약 -->
+<div class="card" id="results-summary" style="display: none;">
+    <h3>📊 분석 결과 요약</h3>
+    <div id="summary-content">
+        <!-- 동적으로 생성됩니다 -->
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            📊 상세 대시보드 보기
+        </a>
+        <a href="{{ url_for('patterns') }}" class="btn btn-info">
+            🔍 패턴 분석 보기
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 분석 페이지 전용 JavaScript
+
+class AnalysisPage {
+    constructor() {
+        this.stepStatuses = {
+            'crawl': 'pending',
+            'analyze': 'pending', 
+            'number': 'pending',
+            'pattern': 'pending'
+        };
+        
+        this.init();
+    }
+    
+    init() {
+        this.updateStepStatuses();
+        this.startStatusPolling();
+    }
+    
+    // 단계 상태 업데이트
+    async updateStepStatuses() {
+        try {
+            const response = await fetch('/api/status');
+            const status = await response.json();
+            
+            // 상태 매핑
+            this.stepStatuses.crawl = status.crawl_data_exists ? 'completed' : 'pending';
+            this.stepStatuses.analyze = status.basic_analysis_exists ? 'completed' : 'pending';
+            this.stepStatuses.number = status.number_analysis_exists ? 'completed' : 'pending';
+            this.stepStatuses.pattern = status.pattern_analysis_exists ? 'completed' : 'pending';
+            
+            // UI 업데이트
+            this.updateStepUI();
+            
+        } catch (error) {
+            console.error('상태 업데이트 실패:', error);
+        }
+    }
+    
+    // 단계 UI 업데이트
+    updateStepUI() {
+        Object.entries(this.stepStatuses).forEach(([step, status]) => {
+            const stepElement = document.getElementById(`step-${step}`);
+            const statusElement = document.getElementById(`status-${step}`);
+            const resultsElement = document.getElementById(`results-${step}`);
+            
+            if (stepElement && statusElement) {
+                // 클래스 제거
+                stepElement.classList.remove('completed', 'running', 'error');
+                statusElement.classList.remove('status-pending', 'status-running', 'status-completed', 'status-error');
+                
+                // 새로운 상태 적용
+                if (status === 'completed') {
+                    stepElement.classList.add('completed');
+                    statusElement.classList.add('status-completed');
+                    statusElement.textContent = '완료';
+                    if (resultsElement) resultsElement.style.display = 'block';
+                } else if (status === 'running') {
+                    stepElement.classList.add('running');
+                    statusElement.classList.add('status-running');
+                    statusElement.textContent = '실행 중';
+                } else if (status === 'error') {
+                    stepElement.classList.add('error');
+                    statusElement.classList.add('status-error');
+                    statusElement.textContent = '오류';
+                } else {
+                    statusElement.classList.add('status-pending');
+                    statusElement.textContent = '대기';
+                    if (resultsElement) resultsElement.style.display = 'none';
+                }
+            }
+        });
+    }
+    
+    // 로그 추가
+    addLog(message, level = 'info') {
+        const logContainer = document.getElementById('log-container');
+        if (!logContainer) return;
+        
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.innerHTML = `
+            <span class="log-timestamp">[${timestamp}]</span>
+            <span class="log-level-${level}">${message}</span>
+        `;
+        
+        logContainer.appendChild(logEntry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+        
+        // 로그가 너무 많으면 오래된 것 제거
+        const logs = logContainer.querySelectorAll('.log-entry');
+        if (logs.length > 100) {
+            logs[0].remove();
+        }
+    }
+    
+    // 진행률 표시
+    showProgress(show, message = '', percentage = 0) {
+        const progressSection = document.getElementById('progress-section');
+        const progressMessage = document.getElementById('progress-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = document.getElementById('progress-percentage');
+        
+        if (progressSection) {
+            progressSection.style.display = show ? 'block' : 'none';
+        }
+        
+        if (show && progressMessage) {
+            progressMessage.textContent = message;
+        }
+        
+        if (show && progressBar) {
+            progressBar.style.width = `${percentage}%`;
+            progressBar.textContent = `${Math.round(percentage)}%`;
+        }
+        
+        if (show && progressPercentage) {
+            progressPercentage.textContent = `${Math.round(percentage)}%`;
+        }
+    }
+    
+    // 상태 폴링 시작
+    startStatusPolling() {
+        setInterval(() => {
+            this.updateStepStatuses();
+        }, 5000); // 5초마다 상태 확인
+    }
+    
+    // 작업 시작 처리
+    onTaskStart(action) {
+        const stepMap = {
+            'crawl': 'crawl',
+            'analyze': 'analyze', 
+            'number_analyze': 'number',
+            'pattern_analyze': 'pattern'
+        };
+        
+        const step = stepMap[action];
+        if (step) {
+            this.stepStatuses[step] = 'running';
+            this.updateStepUI();
+            this.showProgress(true, `${this.getActionName(action)} 실행 중...`, 0);
+            this.addLog(`${this.getActionName(action)} 작업을 시작했습니다.`, 'info');
+        }
+    }
+    
+    // 작업 완료 처리
+    onTaskComplete(action) {
+        const stepMap = {
+            'crawl': 'crawl',
+            'analyze': 'analyze',
+            'number_analyze': 'number', 
+            'pattern_analyze': 'pattern'
+        };
+        
+        const step = stepMap[action];
+        if (step) {
+            this.stepStatuses[step] = 'completed';
+            this.updateStepUI();
+            this.showProgress(false);
+            this.addLog(`${this.getActionName(action)} 작업이 완료되었습니다.`, 'success');
+        }
+    }
+    
+    // 작업 실패 처리
+    onTaskError(action, error) {
+        const stepMap = {
+            'crawl': 'crawl',
+            'analyze': 'analyze',
+            'number_analyze': 'number',
+            'pattern_analyze': 'pattern'
+        };
+        
+        const step = stepMap[action];
+        if (step) {
+            this.stepStatuses[step] = 'error';
+            this.updateStepUI();
+            this.showProgress(false);
+            this.addLog(`${this.getActionName(action)} 작업이 실패했습니다: ${error}`, 'error');
+        }
+    }
+    
+    // 작업명 변환
+    getActionName(action) {
+        const names = {
+            'crawl': '데이터 크롤링',
+            'analyze': '기본 분석',
+            'number_analyze': '번호별 분석',
+            'pattern_analyze': '패턴 분석'
+        };
+        return names[action] || action;
+    }
+}
+
+// 분석 페이지 인스턴스 생성
+const analysisPage = new AnalysisPage();
+
+// 기존 함수들 확장
+const originalExecuteAction = window.executeAction;
+window.executeAction = function(action) {
+    analysisPage.onTaskStart(action);
+    if (originalExecuteAction) {
+        originalExecuteAction(action);
+    }
+};
+</script>
+{% endblock %}

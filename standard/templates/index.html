@@ -59,37 +59,62 @@
     <!-- 빠른 실행 패널 -->
     <div class="card">
         <h3>🚀 빠른 실행</h3>
+
+        <!-- 연금복권 타입 선택 -->
+        <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <h4 style="margin-bottom: 10px;">📋 연금복권 타입 선택</h4>
+            <div style="display: flex; gap: 15px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="radio" name="lottery_type" value="720" checked style="margin-right: 8px;">
+                    <span>🏆 연금복권720+ (월 700만원 × 20년)</span>
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="radio" name="lottery_type" value="520" style="margin-right: 8px;">
+                    <span>💰 연금복권520 (월 500만원 × 20년)</span>
+                </label>
+            </div>
+        </div>
+
         <p>각 단계를 순서대로 실행하세요:</p>
-        
+
         <div style="margin: 20px 0;">
             <div style="margin-bottom: 15px;">
                 <strong>1단계:</strong> 데이터 수집
                 <div style="margin-top: 5px;">
-                    <button class="btn btn-primary" onclick="executeAction('crawl')">
+                    <button class="btn btn-primary" onclick="executeActionWithType('crawl')">
                         🕷️ 데이터 크롤링
                     </button>
                 </div>
             </div>
-            
+
             <div style="margin-bottom: 15px;">
                 <strong>2단계:</strong> 기본 분석
                 <div style="margin-top: 5px;">
-                    <button class="btn btn-success" onclick="executeAction('analyze')">
+                    <button class="btn btn-success" onclick="executeActionWithType('analyze')">
                         📈 기본 분석 실행
                     </button>
                 </div>
             </div>
-            
+
             <div style="margin-bottom: 15px;">
                 <strong>3단계:</strong> 고급 분석
                 <div style="margin-top: 5px;">
-                    <button class="btn btn-info" onclick="executeAction('number_analyze')">
+                    <button class="btn btn-info" onclick="executeActionWithType('number_analyze')">
                         🔢 번호별 분석 실행
                     </button>
                 </div>
             </div>
+
+            <div style="margin-bottom: 15px;">
+                <strong>4단계:</strong> 패턴 분석
+                <div style="margin-top: 5px;">
+                    <button class="btn btn-secondary" onclick="executeActionWithType('pattern_analyze')">
+                        🔍 패턴 분석 실행
+                    </button>
+                </div>
+            </div>
         </div>
-        
+
         <div style="border-top: 1px solid #e9ecef; padding-top: 15px; margin-top: 20px;">
             <button class="btn btn-secondary" onclick="refreshStatus()">
                 🔄 상태 새로고침
@@ -165,7 +190,8 @@
             {% set chart_path = 'charts/' + filename %}
             <div style="text-align: center;">
                 <h4 style="margin-bottom: 10px;">{{ title }}</h4>
-                <img src="{{ url_for('serve_chart', filename=filename) }}?v={{ moment().format('X') if moment else '' }}" 
+                <img src="{{ url_for('serve_chart', filename=filename) }}"
+                     onload="this.src += '?v=' + Date.now();"
                      alt="{{ title }}" 
                      style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">

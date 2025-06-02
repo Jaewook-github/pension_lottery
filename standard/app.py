@@ -14,21 +14,32 @@ import logging
 from config import config
 
 # 전역 변수
-app = Flask(__name__)
 running_tasks = {}  # 실행 중인 작업 추적
 
 
 def create_app(config_name=None):
     """Flask 애플리케이션 팩토리"""
-    app = Flask(__name__)
-
     # 설정 로드
     config_name = config_name or os.environ.get('FLASK_CONFIG') or 'default'
+
+    app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
     # 로깅 설정
     setup_logging(app)
+
+    # 유틸리티 함수들 등록
+    register_utility_functions(app)
+
+    # 라우트 등록
+    register_routes(app)
+
+    # 에러 핸들러 등록
+    register_error_handlers(app)
+
+    # 템플릿 필터 등록
+    register_template_filters(app)
 
     return app
 
@@ -45,200 +56,318 @@ def setup_logging(app):
         app.logger.setLevel(logging.INFO)
 
 
-def load_json_file(filepath):
-    """JSON 파일 로드"""
-    try:
-        if os.path.exists(filepath):
-            with open(filepath, 'r', encoding='utf-8') as f:
-                return json.load(f)
-    except Exception as e:
-        app.logger.error(f"JSON 파일 로드 실패 {filepath}: {e}")
-    return None
+def register_utility_functions(app):
+    """유틸리티 함수들 등록"""
 
+    def load_json_file(filepath):
+        """JSON 파일 로드"""
+        try:
+            if os.path.exists(filepath):
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            app.logger.error(f"JSON 파일 로드 실패 {filepath}: {e}")
+        return None
 
-def get_file_modified_time(filepath):
-    """파일 수정 시간 반환"""
-    try:
-        if os.path.exists(filepath):
-            return datetime.fromtimestamp(os.path.getmtime(filepath)).strftime('%Y-%m-%d %H:%M:%S')
-    except Exception:
-        pass
-    return None
+    def get_file_modified_time(filepath):
+        """파일 수정 시간 반환"""
+        try:
+            if os.path.exists(filepath):
+                return datetime.fromtimestamp(os.path.getmtime(filepath)).strftime('%Y-%m-%d %H:%M:%S')
+        except Exception:
+            pass
+        return None
 
+    def run_python_script(script_name, task_id, lottery_type="720"):
+        """Python 스크립트 실행 (연금복권 타입 지원)"""
+        try:
+            app.logger.info(f"스크립트 실행 시작: {script_name} (타입: {lottery_type})")
+            running_tasks[task_id] = {'status': 'running', 'start_time': datetime.now()}
 
-def run_python_script(script_name, task_id):
-    """Python 스크립트 실행 (백그라운드)"""
-    try:
-        app.logger.info(f"스크립트 실행 시작: {script_name}")
-        running_tasks[task_id] = {'status': 'running', 'start_time': datetime.now()}
+            # 스크립트별 실행 명령 구성
+            if script_name == 'pension_lottery_crawler.py':
+                # 크롤러는 대화형이므로 비대화형 모드로 실행
+                cmd = ['python', script_name, '--type', lottery_type, '--non-interactive']
+            else:
+                # 분석기들은 환경변수로 타입 전달
+                cmd = ['python', script_name]
+                env = os.environ.copy()
+                env['LOTTERY_TYPE'] = lottery_type
 
-        result = subprocess.run(
-            ['python3', script_name],
-            capture_output=True,
-            text=True,
-            cwd=os.path.dirname(os.path.abspath(__file__))
-        )
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=os.path.dirname(os.path.abspath(__file__)),
+                env=env if 'env' in locals() else None
+            )
 
-        if result.returncode == 0:
-            running_tasks[task_id] = {
-                'status': 'completed',
-                'start_time': running_tasks[task_id]['start_time'],
-                'end_time': datetime.now(),
-                'output': result.stdout
-            }
-            app.logger.info(f"스크립트 실행 완료: {script_name}")
-        else:
+            if result.returncode == 0:
+                running_tasks[task_id] = {
+                    'status': 'completed',
+                    'start_time': running_tasks[task_id]['start_time'],
+                    'end_time': datetime.now(),
+                    'output': result.stdout
+                }
+                app.logger.info(f"스크립트 실행 완료: {script_name}")
+            else:
+                running_tasks[task_id] = {
+                    'status': 'failed',
+                    'start_time': running_tasks[task_id]['start_time'],
+                    'end_time': datetime.now(),
+                    'error': result.stderr,
+                    'output': result.stdout
+                }
+                app.logger.error(f"스크립트 실행 실패: {script_name} - {result.stderr}")
+
+        except Exception as e:
             running_tasks[task_id] = {
                 'status': 'failed',
-                'start_time': running_tasks[task_id]['start_time'],
+                'start_time': running_tasks[task_id].get('start_time', datetime.now()),
                 'end_time': datetime.now(),
-                'error': result.stderr,
-                'output': result.stdout
+                'error': str(e)
             }
-            app.logger.error(f"스크립트 실행 실패: {script_name} - {result.stderr}")
+            app.logger.error(f"스크립트 실행 중 예외 발생: {script_name} - {e}")
 
-    except Exception as e:
-        running_tasks[task_id] = {
-            'status': 'failed',
-            'start_time': running_tasks[task_id].get('start_time', datetime.now()),
-            'end_time': datetime.now(),
-            'error': str(e)
+    # 함수들을 앱 컨텍스트에 등록
+    app.load_json_file = load_json_file
+    app.get_file_modified_time = get_file_modified_time
+    app.run_python_script = run_python_script
+
+
+def register_template_filters(app):
+    """템플릿 필터 등록"""
+
+    @app.template_filter('avg')
+    def average_filter(values):
+        """평균 계산 필터"""
+        if not values:
+            return 0
+        return sum(values) / len(values)
+
+    @app.template_filter('safe_divide')
+    def safe_divide_filter(numerator, denominator):
+        """안전한 나눗셈 필터"""
+        if denominator == 0:
+            return 0
+        return numerator / denominator
+
+
+def register_routes(app):
+    """라우트 등록"""
+
+    @app.route('/')
+    def index():
+        """메인 페이지"""
+        # 분석 데이터 로드
+        basic_stats = app.load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'statistics_report.json'))
+        number_summary = app.load_json_file(
+            os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_analysis_summary.json'))
+
+        # 상태 정보
+        status = get_analysis_status(app)
+
+        return render_template('index.html',
+                               basic_stats=basic_stats,
+                               number_summary=number_summary,
+                               status=status)
+
+    @app.route('/dashboard')
+    def dashboard():
+        """대시보드 페이지"""
+        # 모든 분석 데이터 로드
+        data = {
+            'basic_stats': app.load_json_file(
+                os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'statistics_report.json')),
+            'number_summary': app.load_json_file(
+                os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_analysis_summary.json')),
+            'number_frequency': app.load_json_file(
+                os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_frequency.json')),
+            'companion_numbers': app.load_json_file(
+                os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'companion_numbers.json')),
+            'number_trends': app.load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_trends.json'))
         }
-        app.logger.error(f"스크립트 실행 중 예외 발생: {script_name} - {e}")
+
+        return render_template('dashboard.html', **data)
+
+    @app.route('/analysis')
+    def analysis():
+        """분석 실행 페이지"""
+        return render_template('analysis.html')
+
+    @app.route('/patterns')
+    def patterns():
+        """패턴 분석 페이지"""
+        # 패턴 분석 데이터 로드
+        pattern_summary = app.load_json_file(
+            os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'pattern_analysis_summary.json'))
+        odd_even_patterns = app.load_json_file(
+            os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'odd_even_patterns.json'))
+        consecutive_patterns = app.load_json_file(
+            os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'consecutive_patterns.json'))
+        gap_patterns = app.load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_gaps.json'))
+
+        return render_template('patterns.html',
+                               pattern_summary=pattern_summary,
+                               odd_even_patterns=odd_even_patterns,
+                               consecutive_patterns=consecutive_patterns,
+                               gap_patterns=gap_patterns)
+
+    @app.route('/api/execute/<action>', methods=['POST'])
+    def execute_action(action):
+        """분석 작업 실행 API"""
+        task_id = f"{action}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+
+        script_map = {
+            'crawl': 'pension_lottery_crawler.py',
+            'analyze': 'pension_lottery_analyzer.py',
+            'number_analyze': 'number_analyzer.py',
+            'pattern_analyze': 'pattern_analyzer.py'
+        }
+
+        if action not in script_map:
+            return jsonify({'status': 'error', 'message': '잘못된 작업입니다.'}), 400
+
+        # 이미 실행 중인 같은 작업이 있는지 확인
+        for tid, task in running_tasks.items():
+            if tid.startswith(action) and task['status'] == 'running':
+                return jsonify({'status': 'error', 'message': '이미 실행 중인 작업이 있습니다.', 'task_id': tid})
+
+        # 백그라운드로 스크립트 실행
+        thread = threading.Thread(target=app.run_python_script, args=(script_map[action], task_id))
+        thread.daemon = True
+        thread.start()
+
+        return jsonify({'status': 'started', 'message': '작업이 시작되었습니다.', 'task_id': task_id})
+
+    @app.route('/api/task/<task_id>')
+    def get_task_status(task_id):
+        """작업 상태 확인 API"""
+        if task_id in running_tasks:
+            task = running_tasks[task_id].copy()
+            # datetime 객체를 문자열로 변환
+            if 'start_time' in task and isinstance(task['start_time'], datetime):
+                task['start_time'] = task['start_time'].strftime('%Y-%m-%d %H:%M:%S')
+            if 'end_time' in task and isinstance(task['end_time'], datetime):
+                task['end_time'] = task['end_time'].strftime('%Y-%m-%d %H:%M:%S')
+            return jsonify(task)
+        else:
+            return jsonify({'status': 'not_found'}), 404
+
+    @app.route('/api/status')
+    def api_status():
+        """전체 상태 확인 API"""
+        return jsonify(get_analysis_status(app))
+
+    @app.route('/api/charts')
+    def get_available_charts():
+        """사용 가능한 차트 목록 API"""
+        charts = []
+        chart_files = [
+            'jo_frequency.png',
+            'recent_jo_frequency.png',
+            'last_digit_frequency.png',
+            'number_frequency_by_position.png',
+            'second_number_frequency.png',
+            'winning_numbers_frequency.png',
+            'duplicated_winning_numbers.png',
+            'number_trends.png',
+            'pattern_analysis.png',
+            'gap_analysis.png'
+        ]
+
+        for filename in chart_files:
+            filepath = os.path.join(app.config['CHARTS_DIR'], filename)
+            if os.path.exists(filepath):
+                charts.append({
+                    'filename': filename,
+                    'title': get_chart_title(filename),
+                    'modified': app.get_file_modified_time(filepath)
+                })
+
+        # 동반 출현 히트맵 추가
+        for pos in range(1, 7):
+            filename = f'companion_heatmap_pos{pos}.png'
+            filepath = os.path.join(app.config['CHARTS_DIR'], filename)
+            if os.path.exists(filepath):
+                charts.append({
+                    'filename': filename,
+                    'title': f'{pos}자리 동반 출현 히트맵',
+                    'modified': app.get_file_modified_time(filepath)
+                })
+
+        return jsonify(charts)
+
+    @app.route('/charts/<filename>')
+    def serve_chart(filename):
+        """차트 이미지 제공"""
+        return send_from_directory(app.config['CHARTS_DIR'], filename)
+
+    @app.route('/api/data/<data_type>')
+    def get_analysis_data(data_type):
+        """분석 데이터 API"""
+        data_files = {
+            'basic': 'statistics_report.json',
+            'frequency': 'number_frequency.json',
+            'companion': 'companion_numbers.json',
+            'trends': 'number_trends.json',
+            'summary': 'number_analysis_summary.json',
+            'patterns': 'pattern_analysis_summary.json',
+            'odd_even': 'odd_even_patterns.json',
+            'consecutive': 'consecutive_patterns.json',
+            'gaps': 'number_gaps.json',
+            'combinations': 'jo_number_combinations.json'
+        }
+
+        if data_type not in data_files:
+            return jsonify({'error': '잘못된 데이터 타입'}), 400
+
+        filepath = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], data_files[data_type])
+        data = app.load_json_file(filepath)
+
+        if data is None:
+            return jsonify({'error': '데이터를 찾을 수 없습니다.'}), 404
+
+        return jsonify(data)
 
 
-# 라우트 정의
-@app.route('/')
-def index():
-    """메인 페이지"""
-    # 분석 데이터 로드
-    basic_stats = load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'statistics_report.json'))
-    number_summary = load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_analysis_summary.json'))
+def register_error_handlers(app):
+    """에러 핸들러 등록"""
 
-    # 상태 정보
-    status = get_analysis_status()
+    @app.errorhandler(404)
+    def not_found_error(error):
+        return render_template('error.html', error_code=404, error_message='페이지를 찾을 수 없습니다.'), 404
 
-    return render_template('index.html',
-                           basic_stats=basic_stats,
-                           number_summary=number_summary,
-                           status=status)
+    @app.errorhandler(500)
+    def internal_error(error):
+        return render_template('error.html', error_code=500, error_message='서버 내부 오류가 발생했습니다.'), 500
 
 
-@app.route('/dashboard')
-def dashboard():
-    """대시보드 페이지"""
-    # 모든 분석 데이터 로드
-    data = {
-        'basic_stats': load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'statistics_report.json')),
-        'number_summary': load_json_file(
-            os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_analysis_summary.json')),
-        'number_frequency': load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_frequency.json')),
-        'companion_numbers': load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'companion_numbers.json')),
-        'number_trends': load_json_file(os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_trends.json'))
-    }
+def get_analysis_status(app):
+    """분석 상태 확인 (수정된 버전)"""
+    # 기본적으로 연금복권720+ 사용
+    lottery_data_file = os.path.join(app.config['LOTTERY_DATA_DIR'], 'pension_lottery_720_all.csv')
 
-    return render_template('dashboard.html', **data)
+    # 연금복권520 파일도 확인
+    lottery_520_file = os.path.join(app.config['LOTTERY_DATA_DIR'], 'pension_lottery_520_all.csv')
 
-
-@app.route('/api/execute/<action>', methods=['POST'])
-def execute_action(action):
-    """분석 작업 실행 API"""
-    task_id = f"{action}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-    script_map = {
-        'crawl': 'pension_lottery_crawler.py',
-        'analyze': 'pension_lottery_analyzer.py',
-        'number_analyze': 'number_analyzer.py'
-    }
-
-    if action not in script_map:
-        return jsonify({'status': 'error', 'message': '잘못된 작업입니다.'}), 400
-
-    # 이미 실행 중인 같은 작업이 있는지 확인
-    for tid, task in running_tasks.items():
-        if tid.startswith(action) and task['status'] == 'running':
-            return jsonify({'status': 'error', 'message': '이미 실행 중인 작업이 있습니다.', 'task_id': tid})
-
-    # 백그라운드로 스크립트 실행
-    thread = threading.Thread(target=run_python_script, args=(script_map[action], task_id))
-    thread.daemon = True
-    thread.start()
-
-    return jsonify({'status': 'started', 'message': '작업이 시작되었습니다.', 'task_id': task_id})
-
-
-@app.route('/api/task/<task_id>')
-def get_task_status(task_id):
-    """작업 상태 확인 API"""
-    if task_id in running_tasks:
-        task = running_tasks[task_id].copy()
-        # datetime 객체를 문자열로 변환
-        if 'start_time' in task and isinstance(task['start_time'], datetime):
-            task['start_time'] = task['start_time'].strftime('%Y-%m-%d %H:%M:%S')
-        if 'end_time' in task and isinstance(task['end_time'], datetime):
-            task['end_time'] = task['end_time'].strftime('%Y-%m-%d %H:%M:%S')
-        return jsonify(task)
-    else:
-        return jsonify({'status': 'not_found'}), 404
-
-
-@app.route('/api/status')
-def api_status():
-    """전체 상태 확인 API"""
-    return jsonify(get_analysis_status())
-
-
-def get_analysis_status():
-    """분석 상태 확인"""
-    lottery_data_file = os.path.join(app.config['LOTTERY_DATA_DIR'], 'pension_lottery_all.csv')
     basic_analysis_file = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'statistics_report.json')
     number_analysis_file = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_analysis_summary.json')
+    pattern_analysis_file = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'pattern_analysis_summary.json')
 
     return {
-        'crawl_data_exists': os.path.exists(lottery_data_file),
+        'crawl_data_exists': os.path.exists(lottery_data_file) or os.path.exists(lottery_520_file),
+        'lottery_720_exists': os.path.exists(lottery_data_file),
+        'lottery_520_exists': os.path.exists(lottery_520_file),
         'basic_analysis_exists': os.path.exists(basic_analysis_file),
         'number_analysis_exists': os.path.exists(number_analysis_file),
-        'last_crawl': get_file_modified_time(lottery_data_file),
-        'last_analysis': get_file_modified_time(basic_analysis_file),
-        'last_number_analysis': get_file_modified_time(number_analysis_file),
+        'pattern_analysis_exists': os.path.exists(pattern_analysis_file),
+        'last_crawl': app.get_file_modified_time(lottery_data_file),
+        'last_analysis': app.get_file_modified_time(basic_analysis_file),
+        'last_number_analysis': app.get_file_modified_time(number_analysis_file),
+        'last_pattern_analysis': app.get_file_modified_time(pattern_analysis_file),
         'running_tasks': len([t for t in running_tasks.values() if t['status'] == 'running'])
     }
-
-
-@app.route('/api/charts')
-def get_available_charts():
-    """사용 가능한 차트 목록 API"""
-    charts = []
-    chart_files = [
-        'jo_frequency.png',
-        'recent_jo_frequency.png',
-        'last_digit_frequency.png',
-        'number_frequency_by_position.png',
-        'second_number_frequency.png',
-        'number_trends.png'
-    ]
-
-    for filename in chart_files:
-        filepath = os.path.join(app.config['CHARTS_DIR'], filename)
-        if os.path.exists(filepath):
-            charts.append({
-                'filename': filename,
-                'title': get_chart_title(filename),
-                'modified': get_file_modified_time(filepath)
-            })
-
-    # 동반 출현 히트맵 추가
-    for pos in range(1, 7):
-        filename = f'companion_heatmap_pos{pos}.png'
-        filepath = os.path.join(app.config['CHARTS_DIR'], filename)
-        if os.path.exists(filepath):
-            charts.append({
-                'filename': filename,
-                'title': f'{pos}자리 동반 출현 히트맵',
-                'modified': get_file_modified_time(filepath)
-            })
-
-    return jsonify(charts)
 
 
 def get_chart_title(filename):
@@ -249,49 +378,13 @@ def get_chart_title(filename):
         'last_digit_frequency.png': '끝자리 출현 빈도',
         'number_frequency_by_position.png': '자리별 숫자 출현 빈도',
         'second_number_frequency.png': '2등 번호 출현 빈도',
-        'number_trends.png': '번호별 트렌드 점수'
+        'winning_numbers_frequency.png': '당첨번호 출현 빈도',
+        'duplicated_winning_numbers.png': '중복 출현 당첨번호',
+        'number_trends.png': '번호별 트렌드 점수',
+        'pattern_analysis.png': '홀짝 패턴 분석',
+        'gap_analysis.png': '간격 패턴 분석'
     }
     return titles.get(filename, filename)
-
-
-@app.route('/charts/<filename>')
-def serve_chart(filename):
-    """차트 이미지 제공"""
-    return send_from_directory(app.config['CHARTS_DIR'], filename)
-
-
-@app.route('/api/data/<data_type>')
-def get_analysis_data(data_type):
-    """분석 데이터 API"""
-    data_files = {
-        'basic': 'statistics_report.json',
-        'frequency': 'number_frequency.json',
-        'companion': 'companion_numbers.json',
-        'trends': 'number_trends.json',
-        'summary': 'number_analysis_summary.json'
-    }
-
-    if data_type not in data_files:
-        return jsonify({'error': '잘못된 데이터 타입'}), 400
-
-    filepath = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], data_files[data_type])
-    data = load_json_file(filepath)
-
-    if data is None:
-        return jsonify({'error': '데이터를 찾을 수 없습니다.'}), 404
-
-    return jsonify(data)
-
-
-# 에러 핸들러
-@app.errorhandler(404)
-def not_found_error(error):
-    return render_template('error.html', error_code=404, error_message='페이지를 찾을 수 없습니다.'), 404
-
-
-@app.errorhandler(500)
-def internal_error(error):
-    return render_template('error.html', error_code=500, error_message='서버 내부 오류가 발생했습니다.'), 500
 
 
 # 애플리케이션 실행

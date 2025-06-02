@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}오류 {{ error_code }} - 연금복권 패턴 분석{% endblock %}
+
+{% block header_title %}❌ 오류 발생{% endblock %}
+{% block header_subtitle %}{{ error_code }} - {{ error_message }}{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center; padding: 60px 40px;">
+    <div style="font-size: 6em; margin-bottom: 30px; color: #dc3545;">
+        {% if error_code == 404 %}
+            🔍
+        {% elif error_code == 500 %}
+            ⚠️
+        {% else %}
+            ❌
+        {% endif %}
+    </div>
+    
+    <h2 style="color: #495057; margin-bottom: 20px;">{{ error_message }}</h2>
+    
+    {% if error_code == 404 %}
+        <p style="color: #6c757d; margin-bottom: 30px;">
+            요청하신 페이지를 찾을 수 없습니다.<br>
+            URL을 확인하거나 메인 페이지로 돌아가세요.
+        </p>
+    {% elif error_code == 500 %}
+        <p style="color: #6c757d; margin-bottom: 30px;">
+            서버에 문제가 발생했습니다.<br>
+            잠시 후 다시 시도해주세요.
+        </p>
+    {% else %}
+        <p style="color: #6c757d; margin-bottom: 30px;">
+            예상치 못한 오류가 발생했습니다.
+        </p>
+    {% endif %}
+    
+    <div>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            🏠 메인 페이지로
+        </a>
+        <button class="btn btn-secondary" onclick="history.back()">
+            ← 이전 페이지로
+        </button>
+    </div>
+    
+    {% if error_code == 500 %}
+        <div style="margin-top: 40px; padding: 20px; background: #f8d7da; border-radius: 8px; border-left: 4px solid #dc3545;">
+            <h5 style="color: #721c24; margin-bottom: 10px;">문제 해결 방법</h5>
+            <ul style="text-align: left; color: #721c24; margin: 0; padding-left: 20px;">
+                <li>브라우저를 새로고침해주세요</li>
+                <li>잠시 후 다시 시도해주세요</li>
+                <li>문제가 지속되면 관리자에게 문의하세요</li>
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

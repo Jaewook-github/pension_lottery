@@ -368,7 +368,8 @@
             <div class="pattern-grid">
                 <div class="chart-preview">
                     <h4>홀짝 패턴 분석</h4>
-                    <img src="{{ url_for('serve_chart', filename='pattern_analysis.png') }}?v={{ moment().format('X') if moment else '' }}" 
+                    <img src="{{ url_for('serve_chart', filename='pattern_analysis.png') }}"
+                         onload="this.src += '?v=' + Date.now();"
                          alt="홀짝 패턴 분석"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 6px; color: #6c757d;">
@@ -378,7 +379,8 @@
                 
                 <div class="chart-preview">
                     <h4>간격 패턴 분석</h4>
-                    <img src="{{ url_for('serve_chart', filename='gap_analysis.png') }}?v={{ moment().format('X') if moment else '' }}" 
+                    <img src="{{ url_for('serve_chart', filename='gap_analysis.png') }}"
+                         onload="this.src += '?v=' + Date.now();"
                          alt="간격 패턴 분석"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 6px; color: #6c757d;">

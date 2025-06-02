@@ -229,6 +229,172 @@
 
     {% block head %}{% endblock %}
 </head>
+
+<!-- 공통 JavaScript -->
+<script>
+    // 전역 변수
+    let currentTaskId = null;
+    let checkInterval = null;
+
+    // 기본 유틸리티 함수들
+    function showLoading(show) {
+        const loadingElements = document.querySelectorAll('.loading, .spinner');
+        loadingElements.forEach(element => {
+            element.style.display = show ? 'block' : 'none';
+        });
+    }
+
+    function showAlert(message, type = 'info') {
+        const alertsContainer = document.getElementById('alerts');
+        if (!alertsContainer) {
+            // alerts 컨테이너가 없으면 콘솔에 로그
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            return;
+        }
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
+
+        // 기존 알림 제거
+        alertsContainer.innerHTML = '';
+        alertsContainer.appendChild(alertDiv);
+
+        // 5초 후 자동 제거
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.parentNode.removeChild(alertDiv);
+            }
+        }, 5000);
+    }
+
+    function getActionName(action) {
+        const names = {
+            'crawl': '데이터 크롤링',
+            'analyze': '기본 분석',
+            'number_analyze': '번호별 분석',
+            'pattern_analyze': '패턴 분석'
+        };
+        return names[action] || action;
+    }
+
+    // 간단한 작업 실행 함수 (외부 JavaScript 파일이 로드되지 않은 경우용)
+    async function executeAction(action) {
+        if (currentTaskId) {
+            showAlert('이미 실행 중인 작업이 있습니다.', 'warning');
+            return;
+        }
+
+        showLoading(true);
+
+        try {
+            const response = await fetch(`/api/execute/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'started') {
+                currentTaskId = data.task_id;
+                showAlert(`${getActionName(action)} 작업이 시작되었습니다.`, 'info');
+                startTaskMonitoring();
+            } else {
+                showLoading(false);
+                showAlert(data.message, 'error');
+            }
+        } catch (error) {
+            showLoading(false);
+            showAlert('작업 실행 중 오류가 발생했습니다: ' + error.message, 'error');
+        }
+    }
+
+    function startTaskMonitoring() {
+        if (checkInterval) clearInterval(checkInterval);
+
+        checkInterval = setInterval(async () => {
+            if (currentTaskId) {
+                try {
+                    const response = await fetch(`/api/task/${currentTaskId}`);
+                    const data = await response.json();
+
+                    if (data.status === 'completed') {
+                        showLoading(false);
+                        showAlert('작업이 성공적으로 완료되었습니다!', 'success');
+                        currentTaskId = null;
+                        clearInterval(checkInterval);
+
+                        // 페이지 새로고침
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+
+                    } else if (data.status === 'failed') {
+                        showLoading(false);
+                        showAlert('작업 실행에 실패했습니다: ' + (data.error || '알 수 없는 오류'), 'error');
+                        currentTaskId = null;
+                        clearInterval(checkInterval);
+                    }
+                } catch (error) {
+                    console.error('작업 상태 확인 오류:', error);
+                }
+            }
+        }, 2000);
+    }
+
+    // 상태 새로고침
+    async function refreshStatus() {
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            showAlert('상태가 업데이트되었습니다.', 'success');
+            // 페이지별 상태 업데이트 로직이 있으면 여기에 추가
+        } catch (error) {
+            showAlert('상태 업데이트에 실패했습니다.', 'error');
+        }
+    }
+
+    // 탭 기능 (기본)
+    function showTab(tabName) {
+        if (!event || !event.target) return;
+
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+        event.target.classList.add('active');
+        const targetPane = document.getElementById(tabName);
+        if (targetPane) {
+            targetPane.classList.add('active');
+        }
+    }
+
+    // 패턴 탭 기능
+    function showPatternTab(tabName) {
+        if (!event || !event.target) return;
+
+        document.querySelectorAll('.pattern-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.pattern-pane').forEach(pane => pane.classList.remove('active'));
+
+        event.target.classList.add('active');
+        const targetPane = document.getElementById(tabName);
+        if (targetPane) {
+            targetPane.classList.add('active');
+        }
+    }
+
+    // 페이지 로드 완료 시 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('연금복권 패턴 분석 시스템이 로드되었습니다.');
+    });
+</script>
+
+<!-- 외부 JavaScript 파일 로드 (선택사항) -->
+<script src="{{ url_for('static', filename='js/app.js') }}" onerror="console.log('외부 JS 파일 로드 실패 - 기본 함수 사용')"></script>
+
+{% block scripts %}{% endblock %}
+
 <body>
     <div class="container">
         <div class="header">
@@ -240,9 +406,12 @@
             <ul>
                 <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>🏠 홈</a></li>
                 <li><a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}class="active"{% endif %}>📊 대시보드</a></li>
+                <li><a href="{{ url_for('analysis') }}" {% if request.endpoint == 'analysis' %}class="active"{% endif %}>🔬 분석실행</a></li>
+                <li><a href="{{ url_for('patterns') }}" {% if request.endpoint == 'patterns' %}class="active"{% endif %}>🔍 패턴분석</a></li>
                 <li><a href="#" onclick="executeAction('crawl')">🕷️ 크롤링</a></li>
                 <li><a href="#" onclick="executeAction('analyze')">📈 기본분석</a></li>
                 <li><a href="#" onclick="executeAction('number_analyze')">🔢 번호분석</a></li>
+                <li><a href="#" onclick="executeAction('pattern_analyze')">🔍 패턴분석</a></li>
             </ul>
         </nav>
 

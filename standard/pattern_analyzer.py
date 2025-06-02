@@ -26,8 +26,13 @@ plt.rcParams['axes.unicode_minus'] = False
 
 
 class PatternAnalyzer:
-    def __init__(self, data_file='lottery_data/pension_lottery_all.csv'):
+    def __init__(self, lottery_type="720", data_file=None):
         """고급 패턴 분석기 초기화"""
+        self.lottery_type = lottery_type
+
+        if data_file is None:
+            data_file = f'lottery_data/pension_lottery_{lottery_type}_all.csv'
+
         self.data_file = data_file
         self.data = None
         self.results_dir = 'analysis_results'
@@ -274,8 +279,14 @@ class PatternAnalyzer:
             'adjacent_gaps': defaultdict(int),
             'position_gaps': {},
             'gap_sequences': defaultdict(int),
-            'by_round': []
+            'by_round': [],
+            'statistics': {}  # 통계 정보 추가
         }
+
+        # 통계 계산을 위한 리스트
+        max_gaps = []
+        min_gaps = []
+        avg_gaps = []
 
         # 각 자리별 간격 분석
         for pos in range(5):  # 0-1, 1-2, 2-3, 3-4, 4-5 자리 간격
@@ -293,16 +304,36 @@ class PatternAnalyzer:
                 gap_data['position_gaps'][f'pos{i + 1}-{i + 2}'][gap] += 1
 
             # 간격 시퀀스 패턴 (첫 3개 간격)
-            gap_sequence = tuple(round_gaps[:3])
-            gap_data['gap_sequences'][gap_sequence] += 1
+            if len(round_gaps) >= 3:
+                gap_sequence = tuple(round_gaps[:3])
+                gap_data['gap_sequences'][gap_sequence] += 1
 
-            gap_data['by_round'].append({
-                'round': row['round'],
-                'gaps': round_gaps,
-                'max_gap': max(round_gaps),
-                'min_gap': min(round_gaps),
-                'avg_gap': sum(round_gaps) / len(round_gaps)
-            })
+            # 통계 데이터 수집
+            if round_gaps:
+                max_gap = max(round_gaps)
+                min_gap = min(round_gaps)
+                avg_gap = sum(round_gaps) / len(round_gaps)
+
+                max_gaps.append(max_gap)
+                min_gaps.append(min_gap)
+                avg_gaps.append(avg_gap)
+
+                gap_data['by_round'].append({
+                    'round': row['round'],
+                    'gaps': round_gaps,
+                    'max_gap': max_gap,
+                    'min_gap': min_gap,
+                    'avg_gap': avg_gap
+                })
+
+        # 통계 계산
+        if max_gaps:
+            gap_data['statistics'] = {
+                'avg_max_gap': sum(max_gaps) / len(max_gaps),
+                'avg_min_gap': sum(min_gaps) / len(min_gaps),
+                'overall_avg_gap': sum(avg_gaps) / len(avg_gaps),
+                'total_rounds': len(max_gaps)
+            }
 
         # defaultdict를 일반 딕셔너리로 변환
         gap_data['adjacent_gaps'] = dict(gap_data['adjacent_gaps'])
