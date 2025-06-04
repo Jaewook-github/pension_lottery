@@ -1,28 +1,40 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-연금복권 고급 패턴 분석 스크립트
-- 조합 패턴 분석
-- 연속/건너뛰기 패턴 분석
-- 홀수/짝수 분포 분석
-- 번호 간격 패턴 분석
+연금복권 고급 패턴 분석 스크립트 (수정된 버전)
+- 홀짝 분포 패턴 분석
+- 연속 숫자 패턴 분석
+- 숫자 간격 패턴 분석
+- 조별 번호 조합 분석
 """
 
-import json
-import csv
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from collections import defaultdict, Counter
+import json
 import logging
 from datetime import datetime
+from collections import defaultdict, Counter
 import os
-from itertools import combinations
+import sys
+import platform
+import itertools
+
 
 # 한글 폰트 설정
-plt.rcParams['font.family'] = 'DejaVu Sans'
-plt.rcParams['axes.unicode_minus'] = False
+def setup_matplotlib_font():
+    """플랫폼에 따른 matplotlib 폰트 설정"""
+    system = platform.system()
+
+    if system == 'Darwin':  # macOS
+        plt.rcParams['font.family'] = ['Apple SD Gothic Neo', 'DejaVu Sans']
+    elif system == 'Windows':  # Windows
+        plt.rcParams['font.family'] = ['Malgun Gothic', 'DejaVu Sans']
+    else:  # Linux
+        plt.rcParams['font.family'] = ['DejaVu Sans']
+
+    plt.rcParams['axes.unicode_minus'] = False
 
 
 class PatternAnalyzer:
@@ -39,12 +51,19 @@ class PatternAnalyzer:
         self.charts_dir = 'charts'
 
         # 디렉토리 생성
-        os.makedirs(self.results_dir, exist_ok=True)
-        os.makedirs(self.charts_dir, exist_ok=True)
+        for directory in [self.results_dir, self.charts_dir, 'logs']:
+            try:
+                os.makedirs(directory, exist_ok=True)
+            except PermissionError:
+                print(f"경고: {directory} 디렉토리 생성 권한이 없습니다.")
+            except Exception as e:
+                print(f"경고: {directory} 디렉토리 생성 실패: {e}")
+
+        # 폰트 설정
+        setup_matplotlib_font()
 
         # 로깅 설정
-        log_filename = f"logs/pattern_analysis_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-        os.makedirs('logs', exist_ok=True)
+        log_filename = f"logs/pattern_analysis_{lottery_type}_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
@@ -59,220 +78,166 @@ class PatternAnalyzer:
         """데이터 로드"""
         try:
             self.data = pd.read_csv(self.data_file, encoding='utf-8')
+
+            # 데이터 타입 안전하게 변환
+            self.data['round'] = pd.to_numeric(self.data['round'], errors='coerce')
+            self.data['jo'] = pd.to_numeric(self.data['jo'], errors='coerce')
+
+            # NaN 값 제거
+            self.data = self.data.dropna(subset=['round', 'jo'])
+
+            # 데이터 타입 변환
+            self.data['round'] = self.data['round'].astype(int)
+            self.data['jo'] = self.data['jo'].astype(int)
+
             self.logger.info(f"데이터 로드 완료: {len(self.data)}개 회차")
             return True
+        except FileNotFoundError:
+            self.logger.error(f"데이터 파일을 찾을 수 없습니다: {self.data_file}")
+            return False
         except Exception as e:
             self.logger.error(f"데이터 로드 실패: {e}")
             return False
 
     def analyze_odd_even_patterns(self):
-        """홀수/짝수 분포 분석"""
-        self.logger.info("홀수/짝수 분포 분석 시작")
+        """홀짝 분포 패턴 분석"""
+        self.logger.info("홀짝 분포 패턴 분석 시작")
 
         odd_even_data = {
-            'by_position': {},
             'by_round': [],
-            'overall_stats': {}
+            'overall_distribution': defaultdict(int),
+            'position_patterns': {},
+            'statistics': {}
         }
 
+        # 각 회차별 홀짝 패턴 분석
         for _, row in self.data.iterrows():
             first_num = str(row['first_number']).zfill(6)
-            round_data = {
+            digits = [int(d) for d in first_num]
+
+            # 홀짝 패턴 생성
+            odd_even_pattern = ['홀' if d % 2 == 1 else '짝' for d in digits]
+            odd_count = sum(1 for d in digits if d % 2 == 1)
+            even_count = 6 - odd_count
+
+            pattern_str = ''.join(odd_even_pattern)
+            odd_even_data['overall_distribution'][pattern_str] += 1
+
+            odd_even_data['by_round'].append({
                 'round': row['round'],
-                'positions': {},
-                'odd_count': 0,
-                'even_count': 0
-            }
+                'pattern': pattern_str,
+                'odd_count': odd_count,
+                'even_count': even_count,
+                'digits': digits
+            })
 
-            # 각 자리별 홀수/짝수 분석
-            for i, digit in enumerate(first_num):
-                pos_key = f'pos_{i + 1}'
-                digit_int = int(digit)
-                is_odd = digit_int % 2 == 1
+        # 자리별 홀짝 분포
+        for pos in range(6):
+            pos_patterns = defaultdict(int)
+            for round_data in odd_even_data['by_round']:
+                digit = round_data['digits'][pos]
+                pattern = '홀' if digit % 2 == 1 else '짝'
+                pos_patterns[pattern] += 1
 
-                if pos_key not in odd_even_data['by_position']:
-                    odd_even_data['by_position'][pos_key] = {'odd': 0, 'even': 0}
+            odd_even_data['position_patterns'][f'자리{pos + 1}'] = dict(pos_patterns)
 
-                if is_odd:
-                    odd_even_data['by_position'][pos_key]['odd'] += 1
-                    round_data['odd_count'] += 1
-                else:
-                    odd_even_data['by_position'][pos_key]['even'] += 1
-                    round_data['even_count'] += 1
+        # 통계 계산
+        total_rounds = len(odd_even_data['by_round'])
+        odd_counts = [r['odd_count'] for r in odd_even_data['by_round']]
 
-                round_data['positions'][pos_key] = 'odd' if is_odd else 'even'
-
-            odd_even_data['by_round'].append(round_data)
-
-        # 전체 통계
-        total_rounds = len(self.data)
-        total_digits = total_rounds * 6
-        total_odd = sum([pos_data['odd'] for pos_data in odd_even_data['by_position'].values()])
-        total_even = sum([pos_data['even'] for pos_data in odd_even_data['by_position'].values()])
-
-        odd_even_data['overall_stats'] = {
-            'total_digits': total_digits,
-            'total_odd': total_odd,
-            'total_even': total_even,
-            'odd_percentage': (total_odd / total_digits) * 100,
-            'even_percentage': (total_even / total_digits) * 100
+        odd_even_data['statistics'] = {
+            'avg_odd_count': sum(odd_counts) / len(odd_counts) if odd_counts else 0,
+            'max_odd_count': max(odd_counts) if odd_counts else 0,
+            'min_odd_count': min(odd_counts) if odd_counts else 0,
+            'most_common_pattern': max(odd_even_data['overall_distribution'],
+                                       key=odd_even_data['overall_distribution'].get) if odd_even_data[
+                'overall_distribution'] else '',
+            'total_patterns': len(odd_even_data['overall_distribution'])
         }
 
-        # 패턴 분석 (연속된 홀수/짝수)
-        pattern_counts = defaultdict(int)
-        for round_data in odd_even_data['by_round']:
-            pattern = ''.join([round_data['positions'][f'pos_{i + 1}'][0].upper() for i in range(6)])
-            pattern_counts[pattern] += 1
-
-        odd_even_data['pattern_counts'] = dict(sorted(pattern_counts.items(), key=lambda x: x[1], reverse=True)[:20])
+        # defaultdict를 일반 딕셔너리로 변환
+        odd_even_data['overall_distribution'] = dict(odd_even_data['overall_distribution'])
 
         # 결과 저장
         with open(f'{self.results_dir}/odd_even_patterns.json', 'w', encoding='utf-8') as f:
             json.dump(odd_even_data, f, ensure_ascii=False, indent=2)
 
-        self.logger.info("홀수/짝수 분포 분석 완료")
+        self.logger.info("홀짝 분포 패턴 분석 완료")
         return odd_even_data
 
     def analyze_consecutive_patterns(self):
-        """연속/건너뛰기 패턴 분석"""
-        self.logger.info("연속/건너뛰기 패턴 분석 시작")
+        """연속 숫자 패턴 분석"""
+        self.logger.info("연속 숫자 패턴 분석 시작")
 
         consecutive_data = {
-            'ascending_sequences': defaultdict(int),
-            'descending_sequences': defaultdict(int),
-            'same_digit_sequences': defaultdict(int),
-            'gap_patterns': defaultdict(int),
-            'by_round': []
+            'by_round': [],
+            'consecutive_counts': defaultdict(int),
+            'consecutive_lengths': defaultdict(int),
+            'statistics': {}
         }
 
         for _, row in self.data.iterrows():
             first_num = str(row['first_number']).zfill(6)
             digits = [int(d) for d in first_num]
 
-            round_analysis = {
+            # 연속 숫자 찾기
+            consecutive_sequences = []
+            current_sequence = [digits[0]]
+
+            for i in range(1, len(digits)):
+                if digits[i] == digits[i - 1] + 1:
+                    current_sequence.append(digits[i])
+                else:
+                    if len(current_sequence) >= 2:
+                        consecutive_sequences.append(current_sequence.copy())
+                    current_sequence = [digits[i]]
+
+            # 마지막 시퀀스 체크
+            if len(current_sequence) >= 2:
+                consecutive_sequences.append(current_sequence)
+
+            # 연속 개수 카운트
+            total_consecutive = sum(len(seq) for seq in consecutive_sequences)
+            max_consecutive_length = max([len(seq) for seq in consecutive_sequences]) if consecutive_sequences else 0
+
+            consecutive_data['consecutive_counts'][total_consecutive] += 1
+            consecutive_data['consecutive_lengths'][max_consecutive_length] += 1
+
+            consecutive_data['by_round'].append({
                 'round': row['round'],
                 'digits': digits,
-                'ascending_seq': 0,
-                'descending_seq': 0,
-                'same_seq': 0,
-                'gaps': []
-            }
+                'consecutive_sequences': consecutive_sequences,
+                'total_consecutive': total_consecutive,
+                'max_consecutive_length': max_consecutive_length
+            })
 
-            # 연속 패턴 분석
-            asc_count = desc_count = same_count = 0
-            current_asc = current_desc = current_same = 1
+        # 통계 계산
+        total_consecutive_list = [r['total_consecutive'] for r in consecutive_data['by_round']]
+        max_lengths = [r['max_consecutive_length'] for r in consecutive_data['by_round']]
 
-            for i in range(1, 6):
-                # 상승 연속
-                if digits[i] == digits[i - 1] + 1:
-                    current_asc += 1
-                else:
-                    if current_asc >= 2:
-                        consecutive_data['ascending_sequences'][current_asc] += 1
-                        asc_count = max(asc_count, current_asc)
-                    current_asc = 1
+        consecutive_data['statistics'] = {
+            'avg_consecutive_count': sum(total_consecutive_list) / len(
+                total_consecutive_list) if total_consecutive_list else 0,
+            'max_consecutive_in_single_round': max(total_consecutive_list) if total_consecutive_list else 0,
+            'avg_max_consecutive_length': sum(max_lengths) / len(max_lengths) if max_lengths else 0,
+            'rounds_with_consecutive': sum(1 for c in total_consecutive_list if c > 0),
+            'consecutive_probability': (sum(1 for c in total_consecutive_list if c > 0) / len(
+                total_consecutive_list) * 100) if total_consecutive_list else 0
+        }
 
-                # 하강 연속
-                if digits[i] == digits[i - 1] - 1:
-                    current_desc += 1
-                else:
-                    if current_desc >= 2:
-                        consecutive_data['descending_sequences'][current_desc] += 1
-                        desc_count = max(desc_count, current_desc)
-                    current_desc = 1
-
-                # 동일 숫자 연속
-                if digits[i] == digits[i - 1]:
-                    current_same += 1
-                else:
-                    if current_same >= 2:
-                        consecutive_data['same_digit_sequences'][current_same] += 1
-                        same_count = max(same_count, current_same)
-                    current_same = 1
-
-                # 간격 분석
-                gap = abs(digits[i] - digits[i - 1])
-                round_analysis['gaps'].append(gap)
-                consecutive_data['gap_patterns'][gap] += 1
-
-            # 마지막 연속 처리
-            if current_asc >= 2:
-                consecutive_data['ascending_sequences'][current_asc] += 1
-                asc_count = max(asc_count, current_asc)
-            if current_desc >= 2:
-                consecutive_data['descending_sequences'][current_desc] += 1
-                desc_count = max(desc_count, current_desc)
-            if current_same >= 2:
-                consecutive_data['same_digit_sequences'][current_same] += 1
-                same_count = max(same_count, current_same)
-
-            round_analysis['ascending_seq'] = asc_count
-            round_analysis['descending_seq'] = desc_count
-            round_analysis['same_seq'] = same_count
-
-            consecutive_data['by_round'].append(round_analysis)
-
-        # 딕셔너리를 일반 딕셔너리로 변환
-        consecutive_data['ascending_sequences'] = dict(consecutive_data['ascending_sequences'])
-        consecutive_data['descending_sequences'] = dict(consecutive_data['descending_sequences'])
-        consecutive_data['same_digit_sequences'] = dict(consecutive_data['same_digit_sequences'])
-        consecutive_data['gap_patterns'] = dict(consecutive_data['gap_patterns'])
+        # defaultdict를 일반 딕셔너리로 변환
+        consecutive_data['consecutive_counts'] = dict(consecutive_data['consecutive_counts'])
+        consecutive_data['consecutive_lengths'] = dict(consecutive_data['consecutive_lengths'])
 
         # 결과 저장
         with open(f'{self.results_dir}/consecutive_patterns.json', 'w', encoding='utf-8') as f:
             json.dump(consecutive_data, f, ensure_ascii=False, indent=2)
 
-        self.logger.info("연속/건너뛰기 패턴 분석 완료")
+        self.logger.info("연속 숫자 패턴 분석 완료")
         return consecutive_data
 
-    def analyze_jo_number_combinations(self):
-        """조와 번호 조합 패턴 분석"""
-        self.logger.info("조와 번호 조합 패턴 분석 시작")
-
-        combination_data = {
-            'jo_first_digit': defaultdict(lambda: defaultdict(int)),
-            'jo_last_digit': defaultdict(lambda: defaultdict(int)),
-            'jo_sum_patterns': defaultdict(lambda: defaultdict(int)),
-            'jo_even_odd_ratio': defaultdict(lambda: {'odd': 0, 'even': 0})
-        }
-
-        for _, row in self.data.iterrows():
-            jo = row['jo']
-            first_num = str(row['first_number']).zfill(6)
-
-            # 조와 첫째자리 관계
-            first_digit = first_num[0]
-            combination_data['jo_first_digit'][jo][first_digit] += 1
-
-            # 조와 마지막자리 관계
-            last_digit = first_num[-1]
-            combination_data['jo_last_digit'][jo][last_digit] += 1
-
-            # 조와 숫자 합 관계
-            digit_sum = sum([int(d) for d in first_num])
-            sum_range = f"{digit_sum // 10 * 10}-{digit_sum // 10 * 10 + 9}"
-            combination_data['jo_sum_patterns'][jo][sum_range] += 1
-
-            # 조별 홀수/짝수 비율
-            odd_count = sum([1 for d in first_num if int(d) % 2 == 1])
-            even_count = 6 - odd_count
-            combination_data['jo_even_odd_ratio'][jo]['odd'] += odd_count
-            combination_data['jo_even_odd_ratio'][jo]['even'] += even_count
-
-        # 중첩 defaultdict를 일반 딕셔너리로 변환
-        result_data = {}
-        for key, value in combination_data.items():
-            result_data[key] = {k: dict(v) if isinstance(v, defaultdict) else v for k, v in value.items()}
-
-        # 결과 저장
-        with open(f'{self.results_dir}/jo_number_combinations.json', 'w', encoding='utf-8') as f:
-            json.dump(result_data, f, ensure_ascii=False, indent=2)
-
-        self.logger.info("조와 번호 조합 패턴 분석 완료")
-        return result_data
-
     def analyze_number_gaps(self):
-        """번호 간격 패턴 분석"""
+        """번호 간격 패턴 분석 (수정된 버전)"""
         self.logger.info("번호 간격 패턴 분석 시작")
 
         gap_data = {
@@ -347,209 +312,229 @@ class PatternAnalyzer:
         self.logger.info("번호 간격 패턴 분석 완료")
         return gap_data
 
-    def create_pattern_charts(self, odd_even_data, consecutive_data, gap_data):
-        """패턴 분석 차트 생성"""
-        self.logger.info("패턴 분석 차트 생성 시작")
+    def analyze_jo_number_combinations(self):
+        """조별 번호 조합 분석"""
+        self.logger.info("조별 번호 조합 분석 시작")
 
-        # 1. 홀수/짝수 분포 차트
+        jo_combinations = defaultdict(lambda: defaultdict(int))
+
+        for _, row in self.data.iterrows():
+            jo = row['jo']
+            first_num = str(row['first_number']).zfill(6)
+
+            # 첫 2자리와 마지막 2자리 조합 분석
+            first_two = first_num[:2]
+            last_two = first_num[-2:]
+            middle_two = first_num[2:4]
+
+            jo_combinations[f'{jo}조']['첫2자리'][first_two] += 1
+            jo_combinations[f'{jo}조']['마지막2자리'][last_two] += 1
+            jo_combinations[f'{jo}조']['중간2자리'][middle_two] += 1
+
+        # defaultdict를 일반 딕셔너리로 변환
+        result = {}
+        for jo, combinations in jo_combinations.items():
+            result[jo] = {}
+            for pos, combos in combinations.items():
+                result[jo][pos] = dict(combos)
+
+        # 결과 저장
+        with open(f'{self.results_dir}/jo_number_combinations.json', 'w', encoding='utf-8') as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+
+        self.logger.info("조별 번호 조합 분석 완료")
+        return result
+
+    def create_pattern_analysis_chart(self, odd_even_data, consecutive_data):
+        """패턴 분석 종합 차트 생성"""
+        self.logger.info("패턴 분석 종합 차트 생성 시작")
+
         fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-        fig.suptitle('홀수/짝수 분포 패턴 분석', fontsize=16, fontweight='bold')
 
-        # 자리별 홀수/짝수 분포
-        positions = list(odd_even_data['by_position'].keys())
-        odd_counts = [odd_even_data['by_position'][pos]['odd'] for pos in positions]
-        even_counts = [odd_even_data['by_position'][pos]['even'] for pos in positions]
+        # 1. 홀짝 분포 차트
+        if odd_even_data['position_patterns']:
+            positions = list(odd_even_data['position_patterns'].keys())
+            odd_counts = [odd_even_data['position_patterns'][pos].get('홀', 0) for pos in positions]
+            even_counts = [odd_even_data['position_patterns'][pos].get('짝', 0) for pos in positions]
 
-        x = np.arange(len(positions))
-        width = 0.35
+            x = np.arange(len(positions))
+            width = 0.35
 
-        axes[0, 0].bar(x - width / 2, odd_counts, width, label='홀수', color='lightcoral', alpha=0.7)
-        axes[0, 0].bar(x + width / 2, even_counts, width, label='짝수', color='lightblue', alpha=0.7)
-        axes[0, 0].set_title('자리별 홀수/짝수 분포')
-        axes[0, 0].set_xlabel('자리')
-        axes[0, 0].set_ylabel('출현 횟수')
-        axes[0, 0].set_xticks(x)
-        axes[0, 0].set_xticklabels([f'{i + 1}자리' for i in range(6)])
-        axes[0, 0].legend()
+            axes[0, 0].bar(x - width / 2, odd_counts, width, label='홀수', color='red', alpha=0.7)
+            axes[0, 0].bar(x + width / 2, even_counts, width, label='짝수', color='blue', alpha=0.7)
+            axes[0, 0].set_title('자리별 홀짝 분포', fontweight='bold')
+            axes[0, 0].set_xlabel('자리')
+            axes[0, 0].set_ylabel('출현 횟수')
+            axes[0, 0].set_xticks(x)
+            axes[0, 0].set_xticklabels(positions)
+            axes[0, 0].legend()
 
-        # 전체 홀수/짝수 비율 파이차트
-        total_odd = odd_even_data['overall_stats']['total_odd']
-        total_even = odd_even_data['overall_stats']['total_even']
+        # 2. 연속 숫자 길이 분포
+        if consecutive_data['consecutive_lengths']:
+            lengths = sorted(consecutive_data['consecutive_lengths'].keys())
+            counts = [consecutive_data['consecutive_lengths'][length] for length in lengths]
 
-        axes[0, 1].pie([total_odd, total_even], labels=['홀수', '짝수'],
-                       colors=['lightcoral', 'lightblue'], autopct='%1.1f%%')
-        axes[0, 1].set_title('전체 홀수/짝수 비율')
+            axes[0, 1].bar(lengths, counts, color='green', alpha=0.7)
+            axes[0, 1].set_title('연속 숫자 길이 분포', fontweight='bold')
+            axes[0, 1].set_xlabel('연속 길이')
+            axes[0, 1].set_ylabel('출현 횟수')
 
-        # 가장 많이 나온 홀짝 패턴 (상위 10개)
-        top_patterns = list(odd_even_data['pattern_counts'].items())[:10]
-        pattern_names = [p[0] for p in top_patterns]
-        pattern_counts = [p[1] for p in top_patterns]
+        # 3. 홀짝 패턴 상위 10개
+        if odd_even_data['overall_distribution']:
+            top_patterns = sorted(odd_even_data['overall_distribution'].items(),
+                                  key=lambda x: x[1], reverse=True)[:10]
 
-        axes[1, 0].barh(pattern_names, pattern_counts, color='lightgreen', alpha=0.7)
-        axes[1, 0].set_title('상위 홀짝 패턴 (O:홀수, E:짝수)')
-        axes[1, 0].set_xlabel('출현 횟수')
+            patterns, counts = zip(*top_patterns)
 
-        # 연속 패턴 분포
-        if consecutive_data['ascending_sequences']:
-            seq_lengths = list(consecutive_data['ascending_sequences'].keys())
-            seq_counts = list(consecutive_data['ascending_sequences'].values())
+            axes[1, 0].bar(range(len(patterns)), counts, color='purple', alpha=0.7)
+            axes[1, 0].set_title('홀짝 패턴 상위 10개', fontweight='bold')
+            axes[1, 0].set_xlabel('패턴')
+            axes[1, 0].set_ylabel('출현 횟수')
+            axes[1, 0].set_xticks(range(len(patterns)))
+            axes[1, 0].set_xticklabels(patterns, rotation=45, ha='right')
 
-            axes[1, 1].bar(seq_lengths, seq_counts, color='gold', alpha=0.7)
-            axes[1, 1].set_title('상승 연속 패턴 분포')
-            axes[1, 1].set_xlabel('연속 길이')
+        # 4. 연속 숫자 개수 분포
+        if consecutive_data['consecutive_counts']:
+            counts_keys = sorted(consecutive_data['consecutive_counts'].keys())
+            counts_values = [consecutive_data['consecutive_counts'][key] for key in counts_keys]
+
+            axes[1, 1].bar(counts_keys, counts_values, color='orange', alpha=0.7)
+            axes[1, 1].set_title('연속 숫자 개수 분포', fontweight='bold')
+            axes[1, 1].set_xlabel('연속 숫자 개수')
             axes[1, 1].set_ylabel('출현 횟수')
 
         plt.tight_layout()
         plt.savefig(f'{self.charts_dir}/pattern_analysis.png', dpi=300, bbox_inches='tight')
         plt.close()
 
-        # 2. 간격 패턴 차트
-        plt.figure(figsize=(14, 10))
+        self.logger.info("패턴 분석 종합 차트 생성 완료")
 
-        # 인접 숫자 간격 분포
-        gaps = list(gap_data['adjacent_gaps'].keys())
-        gap_counts = list(gap_data['adjacent_gaps'].values())
+    def create_gap_analysis_chart(self, gap_data):
+        """간격 분석 차트 생성"""
+        self.logger.info("간격 분석 차트 생성 시작")
 
-        plt.subplot(2, 2, 1)
-        plt.bar(gaps, gap_counts, color='skyblue', alpha=0.7)
-        plt.title('인접 숫자 간격 분포')
-        plt.xlabel('간격')
-        plt.ylabel('출현 횟수')
+        fig, axes = plt.subplots(2, 2, figsize=(16, 12))
 
-        # 자리별 간격 분포 (히트맵)
-        position_gaps_matrix = []
-        positions = sorted(gap_data['position_gaps'].keys())
-        all_gaps = sorted(set().union(*[gap_data['position_gaps'][pos].keys() for pos in positions]))
+        # 1. 인접 간격 분포
+        if gap_data['adjacent_gaps']:
+            gaps = sorted(gap_data['adjacent_gaps'].keys())
+            counts = [gap_data['adjacent_gaps'][gap] for gap in gaps]
 
-        for pos in positions:
-            row = [gap_data['position_gaps'][pos].get(gap, 0) for gap in all_gaps]
-            position_gaps_matrix.append(row)
+            axes[0, 0].bar(gaps, counts, color='skyblue', alpha=0.7)
+            axes[0, 0].set_title('인접 숫자 간격 분포', fontweight='bold')
+            axes[0, 0].set_xlabel('간격')
+            axes[0, 0].set_ylabel('출현 횟수')
 
-        plt.subplot(2, 2, 2)
-        sns.heatmap(position_gaps_matrix,
-                    xticklabels=all_gaps,
-                    yticklabels=[pos.replace('pos', '').replace('-', '→') for pos in positions],
-                    annot=True, fmt='d', cmap='YlOrRd')
-        plt.title('자리별 간격 분포 히트맵')
+        # 2. 자리별 간격 분포 (첫 번째 자리 예시)
+        first_pos_gaps = gap_data['position_gaps'].get('pos1-2', {})
+        if first_pos_gaps:
+            gaps = sorted(first_pos_gaps.keys())
+            counts = [first_pos_gaps[gap] for gap in gaps]
 
-        # 간격 통계 (회차별 최대/최소/평균 간격)
-        max_gaps = [round_data['max_gap'] for round_data in gap_data['by_round']]
-        avg_gaps = [round_data['avg_gap'] for round_data in gap_data['by_round']]
+            axes[0, 1].bar(gaps, counts, color='lightgreen', alpha=0.7)
+            axes[0, 1].set_title('1-2자리 간격 분포', fontweight='bold')
+            axes[0, 1].set_xlabel('간격')
+            axes[0, 1].set_ylabel('출현 횟수')
 
-        plt.subplot(2, 2, 3)
-        plt.hist(max_gaps, bins=20, alpha=0.7, color='orange', label='최대 간격')
-        plt.title('회차별 최대 간격 분포')
-        plt.xlabel('최대 간격')
-        plt.ylabel('빈도')
+        # 3. 최대 간격 히스토그램
+        if gap_data['by_round']:
+            max_gaps = [round_data['max_gap'] for round_data in gap_data['by_round']]
 
-        plt.subplot(2, 2, 4)
-        plt.hist(avg_gaps, bins=20, alpha=0.7, color='green', label='평균 간격')
-        plt.title('회차별 평균 간격 분포')
-        plt.xlabel('평균 간격')
-        plt.ylabel('빈도')
+            axes[1, 0].hist(max_gaps, bins=10, color='coral', alpha=0.7, edgecolor='black')
+            axes[1, 0].set_title('회차별 최대 간격 분포', fontweight='bold')
+            axes[1, 0].set_xlabel('최대 간격')
+            axes[1, 0].set_ylabel('빈도')
+
+        # 4. 평균 간격 히스토그램
+        if gap_data['by_round']:
+            avg_gaps = [round_data['avg_gap'] for round_data in gap_data['by_round']]
+
+            axes[1, 1].hist(avg_gaps, bins=10, color='gold', alpha=0.7, edgecolor='black')
+            axes[1, 1].set_title('회차별 평균 간격 분포', fontweight='bold')
+            axes[1, 1].set_xlabel('평균 간격')
+            axes[1, 1].set_ylabel('빈도')
 
         plt.tight_layout()
         plt.savefig(f'{self.charts_dir}/gap_analysis.png', dpi=300, bbox_inches='tight')
         plt.close()
 
-        self.logger.info("패턴 분석 차트 생성 완료")
+        self.logger.info("간격 분석 차트 생성 완료")
 
-    def generate_pattern_summary(self, odd_even_data, consecutive_data, combination_data, gap_data):
-        """패턴 분석 종합 보고서 생성"""
-        self.logger.info("패턴 분석 종합 보고서 생성 시작")
+    def generate_pattern_summary(self, odd_even_data, consecutive_data, gap_data, jo_combinations):
+        """패턴 분석 종합 요약 생성"""
+        self.logger.info("패턴 분석 종합 요약 생성 시작")
 
         summary = {
-            'analysis_summary': {
+            'analysis_info': {
                 'total_rounds': len(self.data),
-                'analysis_date': datetime.now().isoformat(),
-                'data_range': f"{self.data['round'].min()}회 ~ {self.data['round'].max()}회"
+                'lottery_type': self.lottery_type,
+                'analysis_date': datetime.now().isoformat()
             },
-            'odd_even_insights': {
-                'overall_odd_percentage': round(odd_even_data['overall_stats']['odd_percentage'], 2),
-                'overall_even_percentage': round(odd_even_data['overall_stats']['even_percentage'], 2),
-                'most_common_pattern': max(odd_even_data['pattern_counts'].items(), key=lambda x: x[1]),
-                'position_bias': {}
+            'odd_even_summary': {
+                'total_patterns': odd_even_data['statistics']['total_patterns'],
+                'most_common_pattern': odd_even_data['statistics']['most_common_pattern'],
+                'avg_odd_count': round(odd_even_data['statistics']['avg_odd_count'], 2)
             },
-            'consecutive_insights': {
-                'max_ascending_sequence': max(consecutive_data['ascending_sequences'].keys()) if consecutive_data[
-                    'ascending_sequences'] else 0,
-                'max_descending_sequence': max(consecutive_data['descending_sequences'].keys()) if consecutive_data[
-                    'descending_sequences'] else 0,
-                'max_same_sequence': max(consecutive_data['same_digit_sequences'].keys()) if consecutive_data[
-                    'same_digit_sequences'] else 0,
-                'most_common_gap': max(consecutive_data['gap_patterns'].items(), key=lambda x: x[1]) if
-                consecutive_data['gap_patterns'] else None
+            'consecutive_summary': {
+                'consecutive_probability': round(consecutive_data['statistics']['consecutive_probability'], 2),
+                'avg_consecutive_count': round(consecutive_data['statistics']['avg_consecutive_count'], 2),
+                'max_consecutive_in_single_round': consecutive_data['statistics']['max_consecutive_in_single_round']
             },
-            'gap_insights': {
-                'most_common_adjacent_gap': max(gap_data['adjacent_gaps'].items(), key=lambda x: x[1]),
-                'avg_max_gap': round(np.mean([r['max_gap'] for r in gap_data['by_round']]), 2),
-                'avg_min_gap': round(np.mean([r['min_gap'] for r in gap_data['by_round']]), 2),
-                'overall_avg_gap': round(np.mean([r['avg_gap'] for r in gap_data['by_round']]), 2)
-            },
-            'key_findings': []
+            'gap_summary': gap_data['statistics'],
+            'jo_combinations_count': {jo: len(combinations) for jo, combinations in jo_combinations.items()},
+            'key_insights': []
         }
 
-        # 자리별 홀짝 편향 분석
-        for pos, data in odd_even_data['by_position'].items():
-            total = data['odd'] + data['even']
-            odd_pct = (data['odd'] / total) * 100
-            summary['odd_even_insights']['position_bias'][pos] = {
-                'odd_percentage': round(odd_pct, 1),
-                'bias': 'odd' if odd_pct > 55 else ('even' if odd_pct < 45 else 'balanced')
-            }
-
-        # 주요 발견사항 생성
-        findings = [
-            f"전체 {summary['analysis_summary']['total_rounds']}회차 데이터를 분석했습니다.",
-            f"홀수와 짝수의 전체 비율은 {summary['odd_even_insights']['overall_odd_percentage']}% : {summary['odd_even_insights']['overall_even_percentage']}%입니다.",
-            f"가장 흔한 홀짝 패턴은 '{summary['odd_even_insights']['most_common_pattern'][0]}'으로 {summary['odd_even_insights']['most_common_pattern'][1]}번 출현했습니다.",
+        # 주요 인사이트 생성
+        insights = [
+            f"연금복권{self.lottery_type} 총 {len(self.data)}회차 고급 패턴 분석 완료",
+            f"총 {odd_even_data['statistics']['total_patterns']}개의 홀짝 패턴 발견",
+            f"연속 숫자가 나올 확률: {consecutive_data['statistics']['consecutive_probability']:.1f}%",
+            f"평균 홀수 개수: {odd_even_data['statistics']['avg_odd_count']:.1f}개"
         ]
 
-        if summary['consecutive_insights']['most_common_gap']:
-            findings.append(
-                f"인접 숫자 간 가장 흔한 간격은 {summary['consecutive_insights']['most_common_gap'][0]}으로 {summary['consecutive_insights']['most_common_gap'][1]}번 나타났습니다.")
+        if gap_data['statistics']:
+            insights.append(f"평균 최대 간격: {gap_data['statistics']['avg_max_gap']:.1f}")
 
-        findings.append(
-            f"회차별 평균 최대 간격은 {summary['gap_insights']['avg_max_gap']}이고, 전체 평균 간격은 {summary['gap_insights']['overall_avg_gap']}입니다.")
+        summary['key_insights'] = insights
 
-        summary['key_findings'] = findings
-
-        # 보고서 저장
+        # 결과 저장
         with open(f'{self.results_dir}/pattern_analysis_summary.json', 'w', encoding='utf-8') as f:
             json.dump(summary, f, ensure_ascii=False, indent=2)
 
-        self.logger.info("패턴 분석 종합 보고서 생성 완료")
+        self.logger.info("패턴 분석 종합 요약 생성 완료")
         return summary
 
     def run_full_analysis(self):
         """전체 패턴 분석 실행"""
-        self.logger.info("=== 고급 패턴 분석 시작 ===")
+        self.logger.info(f"=== 연금복권{self.lottery_type} 고급 패턴 분석 시작 ===")
 
         # 데이터 로드
         if not self.load_data():
             return False
 
         try:
-            # 1. 홀수/짝수 분포 분석
+            # 1. 홀짝 분포 패턴 분석
             odd_even_data = self.analyze_odd_even_patterns()
 
-            # 2. 연속/건너뛰기 패턴 분석
+            # 2. 연속 숫자 패턴 분석
             consecutive_data = self.analyze_consecutive_patterns()
 
-            # 3. 조와 번호 조합 분석
-            combination_data = self.analyze_jo_number_combinations()
-
-            # 4. 번호 간격 패턴 분석
+            # 3. 숫자 간격 패턴 분석
             gap_data = self.analyze_number_gaps()
 
-            # 5. 차트 생성
-            self.create_pattern_charts(odd_even_data, consecutive_data, gap_data)
+            # 4. 조별 번호 조합 분석
+            jo_combinations = self.analyze_jo_number_combinations()
 
-            # 6. 종합 보고서 생성
-            summary = self.generate_pattern_summary(odd_even_data, consecutive_data, combination_data, gap_data)
+            # 5. 패턴 분석 차트 생성
+            self.create_pattern_analysis_chart(odd_even_data, consecutive_data)
+            self.create_gap_analysis_chart(gap_data)
+
+            # 6. 종합 요약 생성
+            summary = self.generate_pattern_summary(odd_even_data, consecutive_data, gap_data, jo_combinations)
 
             self.logger.info("=== 고급 패턴 분석 완료 ===")
-            print("고급 패턴 분석이 완료되었습니다!")
+            print(f"연금복권{self.lottery_type} 고급 패턴 분석이 완료되었습니다!")
             print(f"결과 파일: {self.results_dir}/")
             print(f"차트 파일: {self.charts_dir}/")
 
@@ -562,17 +547,39 @@ class PatternAnalyzer:
 
 def main():
     """메인 함수"""
-    analyzer = PatternAnalyzer()
+    # 환경변수에서 연금복권 타입 확인
+    lottery_type = os.environ.get('LOTTERY_TYPE', '720')
+
+    # 명령행 인수 처리
+    if len(sys.argv) > 1:
+        for i, arg in enumerate(sys.argv):
+            if arg == '--type' and i + 1 < len(sys.argv):
+                lottery_type = sys.argv[i + 1]
+
+    # 대화형 모드
+    if lottery_type not in ['720', '520']:
+        print("연금복권 고급 패턴 분석을 시작합니다.")
+        print("1. 연금복권720+ 분석")
+        print("2. 연금복권520 분석")
+
+        choice = input("선택하세요 (1 또는 2, 기본값: 1): ").strip()
+
+        if choice == "2":
+            lottery_type = "520"
+        else:
+            lottery_type = "720"
+
+    analyzer = PatternAnalyzer(lottery_type)
     success = analyzer.run_full_analysis()
 
     if success:
-        print("\n🎉 고급 패턴 분석이 성공적으로 완료되었습니다!")
+        print(f"\n🎉 연금복권{lottery_type} 고급 패턴 분석이 성공적으로 완료되었습니다!")
         print("\n📁 생성된 파일들:")
+        print("- analysis_results/pattern_analysis_summary.json")
         print("- analysis_results/odd_even_patterns.json")
         print("- analysis_results/consecutive_patterns.json")
-        print("- analysis_results/jo_number_combinations.json")
         print("- analysis_results/number_gaps.json")
-        print("- analysis_results/pattern_analysis_summary.json")
+        print("- analysis_results/jo_number_combinations.json")
         print("- charts/pattern_analysis.png")
         print("- charts/gap_analysis.png")
     else:

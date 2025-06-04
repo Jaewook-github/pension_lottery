@@ -1,322 +1,440 @@
 {% extends "base.html" %}
 
-{% block title %}연금복권 패턴 분석 - 메인{% endblock %}
+{% block title %}연금복권 패턴 분석 시스템{% endblock %}
+
+{% block header_title %}🎰 연금복권 패턴 분석 시스템{% endblock %}
+{% block header_subtitle %}데이터 기반 당첨번호 패턴 분석 및 트렌드 예측{% endblock %}
+
+{% block head %}
+<style>
+    .welcome-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-left: 5px solid #007bff;
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-icon {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .quick-actions {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .lottery-type-selector {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 2px solid #e9ecef;
+    }
+
+    .lottery-option {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        margin: 8px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .lottery-option:hover {
+        background: #e3f2fd;
+        border-color: #2196f3;
+    }
+
+    .lottery-option input[type="radio"] {
+        margin-right: 12px;
+        transform: scale(1.2);
+    }
+
+    .lottery-option.selected {
+        background: #e3f2fd;
+        border-color: #2196f3;
+        font-weight: 600;
+    }
+
+    .action-step {
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #28a745;
+        background: #f8fff9;
+    }
+
+    .action-step h4 {
+        color: #155724;
+        margin-bottom: 10px;
+    }
+
+    .action-step p {
+        color: #6c757d;
+        margin-bottom: 15px;
+    }
+
+    .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .status-item {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #6c757d;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status-item.completed {
+        border-left-color: #28a745;
+    }
+
+    .status-item.missing {
+        border-left-color: #dc3545;
+    }
+
+    .status-title {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .status-value {
+        font-size: 1.1em;
+        margin-bottom: 5px;
+    }
+
+    .status-time {
+        font-size: 0.85em;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="grid">
-    <!-- 시스템 상태 카드 -->
-    <div class="card">
-        <h3>📊 시스템 상태</h3>
-        <div id="system-status">
-            {% if status %}
-                <div class="status-item">
-                    <strong>크롤링 데이터:</strong> 
-                    {% if status.crawl_data_exists %}
-                        <span style="color: #28a745;">✅ 있음</span>
-                        {% if status.last_crawl %}
-                            <small>(최종: {{ status.last_crawl }})</small>
-                        {% endif %}
-                    {% else %}
-                        <span style="color: #dc3545;">❌ 없음</span>
-                    {% endif %}
-                </div>
-                
-                <div class="status-item" style="margin-top: 10px;">
-                    <strong>기본 분석:</strong>
-                    {% if status.basic_analysis_exists %}
-                        <span style="color: #28a745;">✅ 완료</span>
-                        {% if status.last_analysis %}
-                            <small>(최종: {{ status.last_analysis }})</small>
-                        {% endif %}
-                    {% else %}
-                        <span style="color: #dc3545;">❌ 미완료</span>
-                    {% endif %}
-                </div>
-                
-                <div class="status-item" style="margin-top: 10px;">
-                    <strong>번호별 분석:</strong>
-                    {% if status.number_analysis_exists %}
-                        <span style="color: #28a745;">✅ 완료</span>
-                        {% if status.last_number_analysis %}
-                            <small>(최종: {{ status.last_number_analysis }})</small>
-                        {% endif %}
-                    {% else %}
-                        <span style="color: #dc3545;">❌ 미완료</span>
-                    {% endif %}
-                </div>
-                
-                {% if status.running_tasks > 0 %}
-                    <div class="status-item" style="margin-top: 10px; color: #007bff;">
-                        <strong>🔄 실행 중인 작업:</strong> {{ status.running_tasks }}개
-                    </div>
-                {% endif %}
-            {% else %}
-                <p>상태 정보를 불러오는 중...</p>
-            {% endif %}
-        </div>
-    </div>
-    
-    <!-- 빠른 실행 패널 -->
-    <div class="card">
-        <h3>🚀 빠른 실행</h3>
-
-        <!-- 연금복권 타입 선택 -->
-        <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-            <h4 style="margin-bottom: 10px;">📋 연금복권 타입 선택</h4>
-            <div style="display: flex; gap: 15px;">
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="radio" name="lottery_type" value="720" checked style="margin-right: 8px;">
-                    <span>🏆 연금복권720+ (월 700만원 × 20년)</span>
-                </label>
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="radio" name="lottery_type" value="520" style="margin-right: 8px;">
-                    <span>💰 연금복권520 (월 500만원 × 20년)</span>
-                </label>
-            </div>
-        </div>
-
-        <p>각 단계를 순서대로 실행하세요:</p>
-
-        <div style="margin: 20px 0;">
-            <div style="margin-bottom: 15px;">
-                <strong>1단계:</strong> 데이터 수집
-                <div style="margin-top: 5px;">
-                    <button class="btn btn-primary" onclick="executeActionWithType('crawl')">
-                        🕷️ 데이터 크롤링
-                    </button>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <strong>2단계:</strong> 기본 분석
-                <div style="margin-top: 5px;">
-                    <button class="btn btn-success" onclick="executeActionWithType('analyze')">
-                        📈 기본 분석 실행
-                    </button>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <strong>3단계:</strong> 고급 분석
-                <div style="margin-top: 5px;">
-                    <button class="btn btn-info" onclick="executeActionWithType('number_analyze')">
-                        🔢 번호별 분석 실행
-                    </button>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <strong>4단계:</strong> 패턴 분석
-                <div style="margin-top: 5px;">
-                    <button class="btn btn-secondary" onclick="executeActionWithType('pattern_analyze')">
-                        🔍 패턴 분석 실행
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div style="border-top: 1px solid #e9ecef; padding-top: 15px; margin-top: 20px;">
-            <button class="btn btn-secondary" onclick="refreshStatus()">
-                🔄 상태 새로고침
-            </button>
-        </div>
+<!-- 환영 섹션 -->
+<div class="welcome-section">
+    <h1>🎰 연금복권 패턴 분석 시스템</h1>
+    <p style="font-size: 1.2em; margin: 20px 0;">
+        연금복권720+와 520의 당첨번호 패턴을 분석하여<br>
+        데이터 기반의 인사이트를 제공합니다
+    </p>
+    <div style="margin-top: 30px;">
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; margin: 0 10px;">
+            📊 빅데이터 분석
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; margin: 0 10px;">
+            🔍 패턴 인식
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; margin: 0 10px;">
+            📈 트렌드 예측
+        </span>
     </div>
 </div>
 
-<!-- 기본 통계 정보 -->
-{% if basic_stats and number_summary %}
-<div class="grid">
-    <div class="card">
-        <h3>📊 기본 통계</h3>
-        <div class="stat-grid">
-            <div class="stat-item">
-                <div class="stat-value">{{ "{:,}".format(basic_stats.total_rounds) if basic_stats.total_rounds else 'N/A' }}</div>
-                <div class="stat-label">총 회차</div>
-            </div>
-            
-            <div class="stat-item">
-                <div class="stat-value">{{ basic_stats.most_frequent_jo.jo if basic_stats.most_frequent_jo else 'N/A' }}</div>
-                <div class="stat-label">최다 출현 조</div>
-            </div>
-            
-            <div class="stat-item">
-                <div class="stat-value">{{ number_summary.frequency_analysis.most_frequent_second[0] if number_summary.frequency_analysis.most_frequent_second else 'N/A' }}</div>
-                <div class="stat-label">2등 최다 출현</div>
-            </div>
-            
-            <div class="stat-item">
-                <div class="stat-value">{{ number_summary.frequency_analysis.most_frequent_second[1] if number_summary.frequency_analysis.most_frequent_second else 'N/A' }}</div>
-                <div class="stat-label">출현 횟수</div>
-            </div>
-        </div>
-        
-        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
-            <p><strong>데이터 범위:</strong> {{ number_summary.analysis_summary.data_range if number_summary.analysis_summary else 'N/A' }}</p>
-            <p><strong>최종 분석:</strong> 
-                {% if number_summary.analysis_summary.analysis_date %}
-                    {{ number_summary.analysis_summary.analysis_date[:19].replace('T', ' ') }}
-                {% else %}
-                    N/A
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    
-    <div class="card">
-        <h3>💡 주요 인사이트</h3>
-        {% if number_summary and number_summary.companion_analysis.insights %}
-            <ul style="padding-left: 20px;">
-                {% for insight in number_summary.companion_analysis.insights %}
-                    <li style="margin-bottom: 8px;">{{ insight }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>인사이트를 표시하려면 번호별 분석을 실행해주세요.</p>
-        {% endif %}
-    </div>
-</div>
+<!-- 빠른 실행 섹션 -->
+<div class="quick-actions">
+    <h3>🚀 빠른 분석 실행</h3>
+    <p>원하는 연금복권 타입을 선택하고 단계별로 분석을 실행하세요.</p>
 
-<!-- 최근 분석 차트 미리보기 -->
-<div class="card">
-    <h3>📈 최근 분석 결과 미리보기</h3>
-    <div class="grid">
-        {% set chart_files = [
-            ('jo_frequency.png', '조별 출현 빈도'),
-            ('number_frequency_by_position.png', '자리별 숫자 출현 빈도'),
-            ('number_trends.png', '번호별 트렌드 점수')
-        ] %}
-        
-        {% for filename, title in chart_files %}
-            {% set chart_path = 'charts/' + filename %}
-            <div style="text-align: center;">
-                <h4 style="margin-bottom: 10px;">{{ title }}</h4>
-                <img src="{{ url_for('serve_chart', filename=filename) }}"
-                     onload="this.src += '?v=' + Date.now();"
-                     alt="{{ title }}" 
-                     style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div style="display: none; padding: 20px; background: #f8f9fa; border-radius: 6px; color: #6c757d;">
-                    차트를 생성하려면 분석을 실행해주세요.
+    <!-- 연금복권 타입 선택 -->
+    <div class="lottery-type-selector">
+        <h4 style="color: #495057; margin-bottom: 15px;">📋 연금복권 타입 선택</h4>
+        <div id="lottery-options">
+            <label class="lottery-option selected" onclick="selectLotteryType('720', this)">
+                <input type="radio" name="lottery_type" value="720" checked>
+                <div>
+                    <strong>🏆 연금복권720+</strong>
+                    <div style="font-size: 0.9em; color: #6c757d;">월 700만원 × 20년 지급</div>
                 </div>
-            </div>
-        {% endfor %}
+            </label>
+            <label class="lottery-option" onclick="selectLotteryType('520', this)">
+                <input type="radio" name="lottery_type" value="520">
+                <div>
+                    <strong>💰 연금복권520</strong>
+                    <div style="font-size: 0.9em; color: #6c757d;">월 500만원 × 20년 지급</div>
+                </div>
+            </label>
+        </div>
     </div>
-    
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
-            📊 전체 대시보드 보기
+
+    <!-- 단계별 실행 -->
+    <div class="action-step">
+        <h4>1단계: 데이터 수집</h4>
+        <p>동행복권 사이트에서 최신 당첨번호 데이터를 수집합니다.</p>
+        <button class="btn btn-primary" onclick="executeActionWithType('crawl')">
+            🕷️ 데이터 크롤링 시작
+        </button>
+        <small style="margin-left: 10px; color: #6c757d;">예상 소요시간: 2-5분</small>
+    </div>
+
+    <div class="action-step">
+        <h4>2단계: 기본 분석</h4>
+        <p>조별 출현 빈도, 트렌드, 끝자리 패턴을 분석합니다.</p>
+        <button class="btn btn-success" onclick="executeActionWithType('analyze')">
+            📈 기본 분석 실행
+        </button>
+        <small style="margin-left: 10px; color: #6c757d;">예상 소요시간: 1-2분</small>
+    </div>
+
+    <div class="action-step">
+        <h4>3단계: 번호별 분석</h4>
+        <p>자리별 출현 빈도, 동반 출현 패턴, 트렌드 점수를 계산합니다.</p>
+        <button class="btn btn-info" onclick="executeActionWithType('number_analyze')">
+            🔢 번호별 분석 실행
+        </button>
+        <small style="margin-left: 10px; color: #6c757d;">예상 소요시간: 2-3분</small>
+    </div>
+
+    <div class="action-step">
+        <h4>4단계: 고급 패턴 분석</h4>
+        <p>홀짝 분포, 연속 패턴, 간격 분석 등 고급 패턴을 분석합니다.</p>
+        <button class="btn btn-secondary" onclick="executeActionWithType('pattern_analyze')">
+            🔍 패턴 분석 실행
+        </button>
+        <small style="margin-left: 10px; color: #6c757d;">예상 소요시간: 3-4분</small>
+    </div>
+
+    <div style="border-top: 1px solid #e9ecef; padding-top: 20px; margin-top: 25px; text-align: center;">
+        <button class="btn btn-outline-primary" onclick="refreshStatus()">
+            🔄 상태 새로고침
+        </button>
+        <a href="{{ url_for('analysis') }}" class="btn btn-outline-info">
+            🔬 상세 분석 페이지
         </a>
     </div>
 </div>
 
-{% else %}
+<!-- 시스템 상태 -->
 <div class="card">
-    <h3>🎯 시작하기</h3>
-    <div class="alert alert-info">
-        <strong>환영합니다!</strong> 연금복권 패턴 분석을 시작하려면 다음 단계를 따르세요:
-        <ol style="margin-top: 15px; padding-left: 25px;">
-            <li><strong>데이터 크롤링:</strong> 동행복권 사이트에서 연금복권 데이터를 수집합니다.</li>
-            <li><strong>기본 분석:</strong> 조별 출현 빈도, 트렌드 등 기본적인 패턴을 분석합니다.</li>
-            <li><strong>번호별 분석:</strong> 각 자리별 숫자 출현 빈도, 동반 출현 패턴을 분석합니다.</li>
-        </ol>
+    <h3>📊 시스템 현재 상태</h3>
+    {% if status %}
+        <div class="status-grid">
+            <!-- 연금복권720+ 데이터 -->
+            <div class="status-item {% if status.lottery_720_exists %}completed{% else %}missing{% endif %}">
+                <div class="status-title">🏆 연금복권720+ 데이터</div>
+                <div class="status-value">
+                    {% if status.lottery_720_exists %}
+                        <span style="color: #28a745;">✅ 수집완료</span>
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 미수집</span>
+                    {% endif %}
+                </div>
+                {% if status.last_crawl %}
+                    <div class="status-time">최종 업데이트: {{ status.last_crawl }}</div>
+                {% endif %}
+            </div>
+
+            <!-- 연금복권520 데이터 -->
+            <div class="status-item {% if status.lottery_520_exists %}completed{% else %}missing{% endif %}">
+                <div class="status-title">💰 연금복권520 데이터</div>
+                <div class="status-value">
+                    {% if status.lottery_520_exists %}
+                        <span style="color: #28a745;">✅ 수집완료</span>
+                    {% else %}
+                        <span style="color: #6c757d;">⚪ 미수집</span>
+                    {% endif %}
+                </div>
+                {% if status.last_crawl_520 %}
+                    <div class="status-time">최종 업데이트: {{ status.last_crawl_520 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- 기본 분석 -->
+            <div class="status-item {% if status.basic_analysis_exists %}completed{% else %}missing{% endif %}">
+                <div class="status-title">📈 기본 분석</div>
+                <div class="status-value">
+                    {% if status.basic_analysis_exists %}
+                        <span style="color: #28a745;">✅ 완료</span>
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 미완료</span>
+                    {% endif %}
+                </div>
+                {% if status.last_analysis %}
+                    <div class="status-time">최종 분석: {{ status.last_analysis }}</div>
+                {% endif %}
+            </div>
+
+            <!-- 번호별 분석 -->
+            <div class="status-item {% if status.number_analysis_exists %}completed{% else %}missing{% endif %}">
+                <div class="status-title">🔢 번호별 분석</div>
+                <div class="status-value">
+                    {% if status.number_analysis_exists %}
+                        <span style="color: #28a745;">✅ 완료</span>
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 미완료</span>
+                    {% endif %}
+                </div>
+                {% if status.last_number_analysis %}
+                    <div class="status-time">최종 분석: {{ status.last_number_analysis }}</div>
+                {% endif %}
+            </div>
+
+            <!-- 패턴 분석 -->
+            <div class="status-item {% if status.pattern_analysis_exists %}completed{% else %}missing{% endif %}">
+                <div class="status-title">🔍 패턴 분석</div>
+                <div class="status-value">
+                    {% if status.pattern_analysis_exists %}
+                        <span style="color: #28a745;">✅ 완료</span>
+                    {% else %}
+                        <span style="color: #dc3545;">❌ 미완료</span>
+                    {% endif %}
+                </div>
+                {% if status.last_pattern_analysis %}
+                    <div class="status-time">최종 분석: {{ status.last_pattern_analysis }}</div>
+                {% endif %}
+            </div>
+
+            <!-- 실행 중인 작업 -->
+            <div class="status-item">
+                <div class="status-title">⚙️ 실행 중인 작업</div>
+                <div class="status-value">
+                    {% if status.running_tasks > 0 %}
+                        <span style="color: #ffc107;">🔄 {{ status.running_tasks }}개 작업</span>
+                    {% else %}
+                        <span style="color: #28a745;">💤 대기 중</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p style="text-align: center; color: #6c757d; padding: 40px;">
+            시스템 상태 정보를 불러오는 중입니다...
+        </p>
+    {% endif %}
+</div>
+
+<!-- 주요 기능 소개 -->
+<div class="feature-grid">
+    <div class="feature-card">
+        <span class="feature-icon">🕷️</span>
+        <h4>자동 데이터 수집</h4>
+        <p>동행복권 공식 사이트에서 최신 당첨번호를 자동으로 수집하여 항상 최신 데이터를 유지합니다.</p>
+        <a href="{{ url_for('analysis') }}" class="btn btn-sm btn-outline-primary">자세히 보기</a>
+    </div>
+
+    <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <h4>통계 기반 분석</h4>
+        <p>조별 출현 빈도, 번호별 트렌드, 동반 출현 패턴 등을 과학적으로 분석합니다.</p>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-primary">대시보드 보기</a>
+    </div>
+
+    <div class="feature-card">
+        <span class="feature-icon">🔍</span>
+        <h4>고급 패턴 인식</h4>
+        <p>홀짝 분포, 연속 숫자, 간격 패턴 등 숨겨진 경향성을 발견합니다.</p>
+        <a href="{{ url_for('patterns') }}" class="btn btn-sm btn-outline-primary">패턴 보기</a>
+    </div>
+
+    <div class="feature-card">
+        <span class="feature-icon">📈</span>
+        <h4>시각화 리포트</h4>
+        <p>복잡한 데이터를 직관적인 차트와 그래프로 쉽게 이해할 수 있습니다.</p>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-primary">차트 보기</a>
+    </div>
+</div>
+
+<!-- 간단한 분석 결과 미리보기 -->
+{% if basic_stats %}
+<div class="card">
+    <h3>📋 최근 분석 결과 미리보기</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>🎯 조별 출현 분석</h5>
+            {% if basic_stats.jo_analysis %}
+                <p><strong>가장 많이 나온 조:</strong>
+                   {{ basic_stats.jo_analysis.most_frequent_jo.jo }}조
+                   ({{ basic_stats.jo_analysis.most_frequent_jo.count }}회,
+                   {{ basic_stats.jo_analysis.most_frequent_jo.percentage }}%)</p>
+                <p><strong>총 분석 회차:</strong> {{ basic_stats.analysis_summary.total_rounds }}회</p>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h5>🔢 번호 패턴 분석</h5>
+            {% if basic_stats.second_number_analysis %}
+                <p><strong>가장 많이 나온 끝자리:</strong>
+                   {{ basic_stats.second_number_analysis.most_frequent_digit.digit }}번
+                   ({{ basic_stats.second_number_analysis.most_frequent_digit.count }}회)</p>
+                <p><strong>분석 날짜:</strong> {{ basic_stats.analysis_summary.analysis_date[:10] }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            📊 전체 분석 결과 보기
+        </a>
     </div>
 </div>
 {% endif %}
 
-<style>
-.stat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.stat-item {
-    text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 6px;
-}
-
-.stat-value {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #007bff;
-}
-
-.stat-label {
-    font-size: 0.9em;
-    color: #6c757d;
-    margin-top: 5px;
-}
-
-.status-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #f1f3f4;
-}
-
-.status-item:last-child {
-    border-bottom: none;
-}
-</style>
+<!-- 알림 영역 -->
+<div id="alerts" style="position: fixed; top: 20px; right: 20px; z-index: 1000;"></div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-// 상태 새로고침 함수
-function refreshStatus() {
-    fetch('/api/status')
-    .then(response => response.json())
-    .then(data => {
-        updateStatusDisplay(data);
-        showAlert('상태가 업데이트되었습니다.', 'success');
-    })
-    .catch(error => {
-        showAlert('상태 업데이트에 실패했습니다: ' + error.message, 'error');
+// 연금복권 타입 선택
+function selectLotteryType(type, element) {
+    // 모든 옵션에서 selected 클래스 제거
+    document.querySelectorAll('.lottery-option').forEach(option => {
+        option.classList.remove('selected');
     });
+
+    // 선택된 옵션에 selected 클래스 추가
+    element.classList.add('selected');
+
+    // 라디오 버튼 체크
+    document.querySelector(`input[value="${type}"]`).checked = true;
 }
 
-// 상태 표시 업데이트
-function updateStatusDisplay(status) {
-    const statusContainer = document.getElementById('system-status');
-    if (!statusContainer) return;
-    
-    const formatTime = (timeStr) => timeStr ? `(최종: ${timeStr})` : '';
-    
-    statusContainer.innerHTML = `
-        <div class="status-item">
-            <strong>크롤링 데이터:</strong> 
-            ${status.crawl_data_exists ? 
-                `<span style="color: #28a745;">✅ 있음</span> <small>${formatTime(status.last_crawl)}</small>` :
-                `<span style="color: #dc3545;">❌ 없음</span>`
-            }
-        </div>
-        <div class="status-item" style="margin-top: 10px;">
-            <strong>기본 분석:</strong>
-            ${status.basic_analysis_exists ? 
-                `<span style="color: #28a745;">✅ 완료</span> <small>${formatTime(status.last_analysis)}</small>` :
-                `<span style="color: #dc3545;">❌ 미완료</span>`
-            }
-        </div>
-        <div class="status-item" style="margin-top: 10px;">
-            <strong>번호별 분석:</strong>
-            ${status.number_analysis_exists ? 
-                `<span style="color: #28a745;">✅ 완료</span> <small>${formatTime(status.last_number_analysis)}</small>` :
-                `<span style="color: #dc3545;">❌ 미완료</span>`
-            }
-        </div>
-        ${status.running_tasks > 0 ? 
-            `<div class="status-item" style="margin-top: 10px; color: #007bff;">
-                <strong>🔄 실행 중인 작업:</strong> ${status.running_tasks}개
-            </div>` : ''
-        }
-    `;
+// 연금복권 타입을 포함한 작업 실행
+function executeActionWithType(action) {
+    const selectedType = document.querySelector('input[name="lottery_type"]:checked')?.value || '720';
+    executeAction(action, selectedType);
 }
 
-// 페이지 로드 시 자동 상태 확인
+// 페이지 로드 시 상태 업데이트
 document.addEventListener('DOMContentLoaded', function() {
-    // 5분마다 자동으로 상태 확인
-    setInterval(refreshStatus, 300000);
+    console.log('연금복권 패턴 분석 시스템 로드 완료');
+
+    // 5초마다 상태 자동 새로고침
+    setInterval(function() {
+        refreshStatus();
+    }, 5000);
 });
 </script>
 {% endblock %}

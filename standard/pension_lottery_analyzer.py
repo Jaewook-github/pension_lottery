@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-연금복권 기본 분석 스크립트
+연금복권 기본 분석 스크립트 (수정된 버전)
 - 조별 출현 빈도 분석
 - 최근 트렌드 분석
 - 2등 끝자리 번호 패턴 분석
@@ -13,18 +13,28 @@ import csv
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
-import platform
 import seaborn as sns
 from collections import defaultdict, Counter
 import logging
 from datetime import datetime
 import os
+import sys
+import platform
+
 
 # 한글 폰트 설정
-matplotlib.rcParams['font.family'] = ['DejaVu Sans', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Arial Unicode MS']
-plt.rcParams['font.family'] = ['DejaVu Sans', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
+def setup_matplotlib_font():
+    """플랫폼에 따른 matplotlib 폰트 설정"""
+    system = platform.system()
+
+    if system == 'Darwin':  # macOS
+        plt.rcParams['font.family'] = ['Apple SD Gothic Neo', 'DejaVu Sans']
+    elif system == 'Windows':  # Windows
+        plt.rcParams['font.family'] = ['Malgun Gothic', 'DejaVu Sans']
+    else:  # Linux
+        plt.rcParams['font.family'] = ['DejaVu Sans']
+
+    plt.rcParams['axes.unicode_minus'] = False
 
 
 class PensionLotteryAnalyzer:
@@ -41,13 +51,20 @@ class PensionLotteryAnalyzer:
         self.results_dir = 'analysis_results'
         self.charts_dir = 'charts'
 
-        # 디렉토리 생성
+        # 디렉토리 생성 (더 안전하게)
         for directory in [self.results_dir, self.charts_dir, 'logs']:
-            os.makedirs(directory, exist_ok=True)
+            try:
+                os.makedirs(directory, exist_ok=True)
+            except PermissionError:
+                print(f"경고: {directory} 디렉토리 생성 권한이 없습니다.")
+            except Exception as e:
+                print(f"경고: {directory} 디렉토리 생성 실패: {e}")
+
+        # 폰트 설정
+        setup_matplotlib_font()
 
         # 로깅 설정
         log_filename = f"logs/basic_analysis_{lottery_type}_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-        os.makedirs('logs', exist_ok=True)
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
@@ -62,10 +79,23 @@ class PensionLotteryAnalyzer:
         """데이터 로드"""
         try:
             self.data = pd.read_csv(self.data_file, encoding='utf-8')
+
+            # 데이터 타입 안전하게 변환
+            self.data['round'] = pd.to_numeric(self.data['round'], errors='coerce')
+            self.data['jo'] = pd.to_numeric(self.data['jo'], errors='coerce')
+
+            # NaN 값 제거
+            self.data = self.data.dropna(subset=['round', 'jo'])
+
+            # 데이터 타입 변환
             self.data['round'] = self.data['round'].astype(int)
             self.data['jo'] = self.data['jo'].astype(int)
+
             self.logger.info(f"데이터 로드 완료: {len(self.data)}개 회차")
             return True
+        except FileNotFoundError:
+            self.logger.error(f"데이터 파일을 찾을 수 없습니다: {self.data_file}")
+            return False
         except Exception as e:
             self.logger.error(f"데이터 로드 실패: {e}")
             return False
@@ -159,19 +189,6 @@ class PensionLotteryAnalyzer:
 
         self.logger.info("최근 트렌드 분석 완료")
         return results
-
-    def setup_matplotlib_font():
-        """플랫폼에 따른 matplotlib 폰트 설정"""
-        system = platform.system()
-
-        if system == 'Darwin':  # macOS
-            plt.rcParams['font.family'] = ['Apple SD Gothic Neo', 'DejaVu Sans']
-        elif system == 'Windows':  # Windows
-            plt.rcParams['font.family'] = ['Malgun Gothic', 'DejaVu Sans']
-        else:  # Linux
-            plt.rcParams['font.family'] = ['DejaVu Sans']
-
-        plt.rcParams['axes.unicode_minus'] = False
 
     def create_jo_frequency_chart(self, jo_data):
         """조별 출현 빈도 차트 생성"""
@@ -271,6 +288,7 @@ class PensionLotteryAnalyzer:
             'analysis_summary': {
                 'total_rounds': len(self.data),
                 'data_range': f"{self.data['round'].min()}회 ~ {self.data['round'].max()}회",
+                'lottery_type': self.lottery_type,
                 'analysis_date': datetime.now().isoformat()
             },
             'jo_analysis': {
@@ -315,7 +333,7 @@ class PensionLotteryAnalyzer:
 
     def run_full_analysis(self):
         """전체 분석 실행"""
-        self.logger.info("=== 기본 분석 시작 ===")
+        self.logger.info(f"=== 연금복권{self.lottery_type} 기본 분석 시작 ===")
 
         # 데이터 로드
         if not self.load_data():
@@ -337,7 +355,7 @@ class PensionLotteryAnalyzer:
             report = self.generate_statistics_report(jo_data, second_data, trend_data)
 
             self.logger.info("=== 기본 분석 완료 ===")
-            print("기본 분석이 완료되었습니다!")
+            print(f"연금복권{self.lottery_type} 기본 분석이 완료되었습니다!")
             print(f"결과 파일: {self.results_dir}/")
             print(f"차트 파일: {self.charts_dir}/")
 
@@ -350,11 +368,33 @@ class PensionLotteryAnalyzer:
 
 def main():
     """메인 함수"""
-    analyzer = PensionLotteryAnalyzer()
+    # 환경변수에서 연금복권 타입 확인
+    lottery_type = os.environ.get('LOTTERY_TYPE', '720')
+
+    # 명령행 인수 처리
+    if len(sys.argv) > 1:
+        for i, arg in enumerate(sys.argv):
+            if arg == '--type' and i + 1 < len(sys.argv):
+                lottery_type = sys.argv[i + 1]
+
+    # 대화형 모드
+    if lottery_type not in ['720', '520']:
+        print("연금복권 기본 분석을 시작합니다.")
+        print("1. 연금복권720+ 분석")
+        print("2. 연금복권520 분석")
+
+        choice = input("선택하세요 (1 또는 2, 기본값: 1): ").strip()
+
+        if choice == "2":
+            lottery_type = "520"
+        else:
+            lottery_type = "720"
+
+    analyzer = PensionLotteryAnalyzer(lottery_type)
     success = analyzer.run_full_analysis()
 
     if success:
-        print("\n🎉 기본 분석이 성공적으로 완료되었습니다!")
+        print(f"\n🎉 연금복권{lottery_type} 기본 분석이 성공적으로 완료되었습니다!")
         print("\n📁 생성된 파일들:")
         print("- analysis_results/statistics_report.json")
         print("- charts/jo_frequency.png")

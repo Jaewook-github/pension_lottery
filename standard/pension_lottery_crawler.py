@@ -14,6 +14,7 @@ import logging
 from datetime import datetime
 import os
 import re
+import sys
 
 
 class PensionLotteryCrawler:
@@ -398,8 +399,6 @@ class PensionLotteryCrawler:
 
 def main():
     """메인 함수"""
-    import sys
-
     # 명령행 인수 처리
     lottery_type = "720"
     interactive = True

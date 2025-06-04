@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-연금복권 패턴 분석 Flask 애플리케이션
+연금복권 패턴 분석 Flask 애플리케이션 (완전 수정된 버전)
 """
 
 import os
@@ -32,14 +32,14 @@ def create_app(config_name=None):
     # 유틸리티 함수들 등록
     register_utility_functions(app)
 
+    # 템플릿 필터 등록
+    register_template_filters(app)
+
     # 라우트 등록
     register_routes(app)
 
     # 에러 핸들러 등록
     register_error_handlers(app)
-
-    # 템플릿 필터 등록
-    register_template_filters(app)
 
     return app
 
@@ -79,27 +79,21 @@ def register_utility_functions(app):
         return None
 
     def run_python_script(script_name, task_id, lottery_type="720"):
-        """Python 스크립트 실행 (연금복권 타입 지원)"""
+        """Python 스크립트 실행 (백그라운드)"""
         try:
             app.logger.info(f"스크립트 실행 시작: {script_name} (타입: {lottery_type})")
             running_tasks[task_id] = {'status': 'running', 'start_time': datetime.now()}
 
-            # 스크립트별 실행 명령 구성
-            if script_name == 'pension_lottery_crawler.py':
-                # 크롤러는 대화형이므로 비대화형 모드로 실행
-                cmd = ['python', script_name, '--type', lottery_type, '--non-interactive']
-            else:
-                # 분석기들은 환경변수로 타입 전달
-                cmd = ['python', script_name]
-                env = os.environ.copy()
-                env['LOTTERY_TYPE'] = lottery_type
+            # 환경변수로 연금복권 타입 전달
+            env = os.environ.copy()
+            env['LOTTERY_TYPE'] = lottery_type
 
             result = subprocess.run(
-                cmd,
+                ['python', script_name],
                 capture_output=True,
                 text=True,
                 cwd=os.path.dirname(os.path.abspath(__file__)),
-                env=env if 'env' in locals() else None
+                env=env
             )
 
             if result.returncode == 0:
@@ -215,8 +209,12 @@ def register_routes(app):
 
     @app.route('/api/execute/<action>', methods=['POST'])
     def execute_action(action):
-        """분석 작업 실행 API"""
+        """분석 작업 실행 API (연금복권 타입 지원)"""
         task_id = f"{action}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+
+        # 요청 본문에서 연금복권 타입 가져오기
+        request_data = request.get_json() or {}
+        lottery_type = request_data.get('lottery_type', '720')
 
         script_map = {
             'crawl': 'pension_lottery_crawler.py',
@@ -233,12 +231,18 @@ def register_routes(app):
             if tid.startswith(action) and task['status'] == 'running':
                 return jsonify({'status': 'error', 'message': '이미 실행 중인 작업이 있습니다.', 'task_id': tid})
 
-        # 백그라운드로 스크립트 실행
-        thread = threading.Thread(target=app.run_python_script, args=(script_map[action], task_id))
+        # 백그라운드로 스크립트 실행 (연금복권 타입 포함)
+        thread = threading.Thread(target=app.run_python_script, args=(script_map[action], task_id, lottery_type))
         thread.daemon = True
         thread.start()
 
-        return jsonify({'status': 'started', 'message': '작업이 시작되었습니다.', 'task_id': task_id})
+        action_name = get_action_name(action)
+        return jsonify({
+            'status': 'started',
+            'message': f'연금복권{lottery_type} {action_name} 작업이 시작되었습니다.',
+            'task_id': task_id,
+            'lottery_type': lottery_type
+        })
 
     @app.route('/api/task/<task_id>')
     def get_task_status(task_id):
@@ -330,6 +334,25 @@ def register_routes(app):
 
         return jsonify(data)
 
+    @app.route('/api/data/patterns')
+    def get_pattern_data():
+        """패턴 분석 데이터 API"""
+        data_files = {
+            'summary': 'pattern_analysis_summary.json',
+            'odd_even': 'odd_even_patterns.json',
+            'consecutive': 'consecutive_patterns.json',
+            'gaps': 'number_gaps.json',
+            'combinations': 'jo_number_combinations.json'
+        }
+
+        result = {}
+        for key, filename in data_files.items():
+            filepath = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], filename)
+            data = app.load_json_file(filepath)
+            result[key] = data
+
+        return jsonify(result)
+
 
 def register_error_handlers(app):
     """에러 핸들러 등록"""
@@ -351,18 +374,24 @@ def get_analysis_status(app):
     # 연금복권520 파일도 확인
     lottery_520_file = os.path.join(app.config['LOTTERY_DATA_DIR'], 'pension_lottery_520_all.csv')
 
+    # 기존 파일명도 확인 (하위 호환성)
+    legacy_file = os.path.join(app.config['LOTTERY_DATA_DIR'], 'pension_lottery_all.csv')
+
     basic_analysis_file = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'statistics_report.json')
     number_analysis_file = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'number_analysis_summary.json')
     pattern_analysis_file = os.path.join(app.config['ANALYSIS_RESULTS_DIR'], 'pattern_analysis_summary.json')
 
     return {
-        'crawl_data_exists': os.path.exists(lottery_data_file) or os.path.exists(lottery_520_file),
+        'crawl_data_exists': os.path.exists(lottery_data_file) or os.path.exists(lottery_520_file) or os.path.exists(
+            legacy_file),
         'lottery_720_exists': os.path.exists(lottery_data_file),
         'lottery_520_exists': os.path.exists(lottery_520_file),
+        'legacy_data_exists': os.path.exists(legacy_file),
         'basic_analysis_exists': os.path.exists(basic_analysis_file),
         'number_analysis_exists': os.path.exists(number_analysis_file),
         'pattern_analysis_exists': os.path.exists(pattern_analysis_file),
-        'last_crawl': app.get_file_modified_time(lottery_data_file),
+        'last_crawl': app.get_file_modified_time(lottery_data_file) or app.get_file_modified_time(legacy_file),
+        'last_crawl_520': app.get_file_modified_time(lottery_520_file),
         'last_analysis': app.get_file_modified_time(basic_analysis_file),
         'last_number_analysis': app.get_file_modified_time(number_analysis_file),
         'last_pattern_analysis': app.get_file_modified_time(pattern_analysis_file),
@@ -385,6 +414,17 @@ def get_chart_title(filename):
         'gap_analysis.png': '간격 패턴 분석'
     }
     return titles.get(filename, filename)
+
+
+def get_action_name(action):
+    """작업명 반환"""
+    names = {
+        'crawl': '데이터 크롤링',
+        'analyze': '기본 분석',
+        'number_analyze': '번호별 분석',
+        'pattern_analyze': '패턴 분석'
+    }
+    return names.get(action, action)
 
 
 # 애플리케이션 실행
