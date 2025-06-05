@@ -1,0 +1,1651 @@
+{
+  "by_round": [
+    {
+      "round": 1,
+      "digits": [
+        1,
+        6,
+        2,
+        1,
+        3,
+        2
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 2,
+      "digits": [
+        4,
+        5,
+        0,
+        5,
+        5,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          4,
+          5
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 3,
+      "digits": [
+        5,
+        4,
+        4,
+        9,
+        5,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 4,
+      "digits": [
+        1,
+        2,
+        4,
+        4,
+        2,
+        0
+      ],
+      "consecutive_sequences": [
+        [
+          1,
+          2
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 5,
+      "digits": [
+        7,
+        5,
+        4,
+        6,
+        5,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 6,
+      "digits": [
+        1,
+        9,
+        3,
+        2,
+        0,
+        2
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 7,
+      "digits": [
+        5,
+        9,
+        7,
+        0,
+        9,
+        3
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 8,
+      "digits": [
+        2,
+        3,
+        4,
+        0,
+        5,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "total_consecutive": 3,
+      "max_consecutive_length": 3
+    },
+    {
+      "round": 9,
+      "digits": [
+        1,
+        3,
+        3,
+        5,
+        1,
+        0
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 10,
+      "digits": [
+        7,
+        7,
+        0,
+        1,
+        7,
+        3
+      ],
+      "consecutive_sequences": [
+        [
+          0,
+          1
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 11,
+      "digits": [
+        8,
+        6,
+        7,
+        6,
+        5,
+        4
+      ],
+      "consecutive_sequences": [
+        [
+          6,
+          7
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 12,
+      "digits": [
+        0,
+        7,
+        6,
+        6,
+        7,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          6,
+          7
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 13,
+      "digits": [
+        6,
+        6,
+        9,
+        2,
+        4,
+        5
+      ],
+      "consecutive_sequences": [
+        [
+          4,
+          5
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 14,
+      "digits": [
+        4,
+        3,
+        2,
+        4,
+        9,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 15,
+      "digits": [
+        4,
+        7,
+        7,
+        2,
+        3,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          2,
+          3
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 16,
+      "digits": [
+        6,
+        6,
+        4,
+        0,
+        5,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 17,
+      "digits": [
+        3,
+        1,
+        7,
+        2,
+        2,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 18,
+      "digits": [
+        5,
+        6,
+        2,
+        2,
+        2,
+        2
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 19,
+      "digits": [
+        8,
+        5,
+        9,
+        2,
+        1,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 20,
+      "digits": [
+        8,
+        1,
+        9,
+        6,
+        0,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 21,
+      "digits": [
+        2,
+        3,
+        9,
+        9,
+        3,
+        7
+      ],
+      "consecutive_sequences": [
+        [
+          2,
+          3
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 22,
+      "digits": [
+        9,
+        1,
+        3,
+        6,
+        2,
+        2
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 23,
+      "digits": [
+        1,
+        5,
+        8,
+        0,
+        7,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 24,
+      "digits": [
+        0,
+        0,
+        2,
+        9,
+        8,
+        9
+      ],
+      "consecutive_sequences": [
+        [
+          8,
+          9
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 25,
+      "digits": [
+        4,
+        6,
+        3,
+        6,
+        3,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 26,
+      "digits": [
+        1,
+        9,
+        2,
+        8,
+        5,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 27,
+      "digits": [
+        4,
+        1,
+        2,
+        0,
+        0,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          1,
+          2
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 28,
+      "digits": [
+        0,
+        8,
+        0,
+        8,
+        3,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 29,
+      "digits": [
+        3,
+        5,
+        5,
+        1,
+        9,
+        2
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 30,
+      "digits": [
+        4,
+        8,
+        7,
+        2,
+        1,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 31,
+      "digits": [
+        7,
+        7,
+        1,
+        5,
+        9,
+        8
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 32,
+      "digits": [
+        5,
+        7,
+        9,
+        1,
+        7,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 33,
+      "digits": [
+        5,
+        9,
+        6,
+        2,
+        1,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 34,
+      "digits": [
+        9,
+        7,
+        7,
+        6,
+        8,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 35,
+      "digits": [
+        5,
+        4,
+        2,
+        4,
+        5,
+        4
+      ],
+      "consecutive_sequences": [
+        [
+          4,
+          5
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 36,
+      "digits": [
+        7,
+        3,
+        5,
+        7,
+        5,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 37,
+      "digits": [
+        4,
+        5,
+        3,
+        8,
+        7,
+        7
+      ],
+      "consecutive_sequences": [
+        [
+          4,
+          5
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 38,
+      "digits": [
+        3,
+        0,
+        7,
+        8,
+        3,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          7,
+          8
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 39,
+      "digits": [
+        1,
+        9,
+        9,
+        1,
+        3,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 40,
+      "digits": [
+        6,
+        3,
+        1,
+        0,
+        8,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 41,
+      "digits": [
+        7,
+        4,
+        2,
+        7,
+        1,
+        4
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 42,
+      "digits": [
+        9,
+        7,
+        4,
+        2,
+        3,
+        1
+      ],
+      "consecutive_sequences": [
+        [
+          2,
+          3
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 43,
+      "digits": [
+        5,
+        8,
+        9,
+        8,
+        3,
+        9
+      ],
+      "consecutive_sequences": [
+        [
+          8,
+          9
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 44,
+      "digits": [
+        6,
+        6,
+        8,
+        8,
+        1,
+        8
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 45,
+      "digits": [
+        3,
+        1,
+        8,
+        7,
+        5,
+        4
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 46,
+      "digits": [
+        0,
+        1,
+        0,
+        9,
+        6,
+        3
+      ],
+      "consecutive_sequences": [
+        [
+          0,
+          1
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 47,
+      "digits": [
+        9,
+        4,
+        1,
+        3,
+        2,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 48,
+      "digits": [
+        7,
+        7,
+        9,
+        3,
+        6,
+        3
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 49,
+      "digits": [
+        3,
+        0,
+        5,
+        2,
+        4,
+        8
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 50,
+      "digits": [
+        5,
+        9,
+        2,
+        1,
+        1,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 51,
+      "digits": [
+        5,
+        1,
+        0,
+        0,
+        1,
+        2
+      ],
+      "consecutive_sequences": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "total_consecutive": 3,
+      "max_consecutive_length": 3
+    },
+    {
+      "round": 52,
+      "digits": [
+        5,
+        9,
+        7,
+        2,
+        2,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 53,
+      "digits": [
+        6,
+        4,
+        9,
+        6,
+        3,
+        8
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 54,
+      "digits": [
+        6,
+        2,
+        7,
+        0,
+        5,
+        4
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 55,
+      "digits": [
+        4,
+        7,
+        7,
+        8,
+        7,
+        9
+      ],
+      "consecutive_sequences": [
+        [
+          7,
+          8
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 56,
+      "digits": [
+        9,
+        9,
+        3,
+        1,
+        7,
+        4
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 57,
+      "digits": [
+        2,
+        7,
+        2,
+        2,
+        8,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 58,
+      "digits": [
+        9,
+        3,
+        9,
+        3,
+        2,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 59,
+      "digits": [
+        1,
+        5,
+        9,
+        0,
+        5,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 60,
+      "digits": [
+        2,
+        1,
+        6,
+        5,
+        1,
+        0
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 61,
+      "digits": [
+        5,
+        7,
+        5,
+        8,
+        6,
+        2
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 62,
+      "digits": [
+        0,
+        1,
+        4,
+        0,
+        7,
+        3
+      ],
+      "consecutive_sequences": [
+        [
+          0,
+          1
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 63,
+      "digits": [
+        3,
+        3,
+        5,
+        2,
+        2,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 64,
+      "digits": [
+        6,
+        7,
+        6,
+        0,
+        0,
+        3
+      ],
+      "consecutive_sequences": [
+        [
+          6,
+          7
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 65,
+      "digits": [
+        7,
+        3,
+        2,
+        3,
+        7,
+        5
+      ],
+      "consecutive_sequences": [
+        [
+          2,
+          3
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 66,
+      "digits": [
+        9,
+        9,
+        0,
+        8,
+        3,
+        4
+      ],
+      "consecutive_sequences": [
+        [
+          3,
+          4
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 67,
+      "digits": [
+        8,
+        0,
+        7,
+        5,
+        3,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 68,
+      "digits": [
+        1,
+        9,
+        1,
+        0,
+        7,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 69,
+      "digits": [
+        7,
+        7,
+        5,
+        5,
+        3,
+        0
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 70,
+      "digits": [
+        2,
+        4,
+        8,
+        6,
+        7,
+        2
+      ],
+      "consecutive_sequences": [
+        [
+          6,
+          7
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 71,
+      "digits": [
+        1,
+        5,
+        9,
+        4,
+        8,
+        6
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 72,
+      "digits": [
+        1,
+        1,
+        4,
+        6,
+        8,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 73,
+      "digits": [
+        5,
+        0,
+        1,
+        0,
+        2,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          0,
+          1
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 74,
+      "digits": [
+        2,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      ],
+      "total_consecutive": 5,
+      "max_consecutive_length": 5
+    },
+    {
+      "round": 75,
+      "digits": [
+        6,
+        5,
+        8,
+        3,
+        4,
+        0
+      ],
+      "consecutive_sequences": [
+        [
+          3,
+          4
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 76,
+      "digits": [
+        8,
+        9,
+        0,
+        9,
+        6,
+        6
+      ],
+      "consecutive_sequences": [
+        [
+          8,
+          9
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 77,
+      "digits": [
+        4,
+        3,
+        6,
+        3,
+        0,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 78,
+      "digits": [
+        5,
+        1,
+        5,
+        8,
+        8,
+        4
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 79,
+      "digits": [
+        4,
+        0,
+        8,
+        3,
+        7,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 80,
+      "digits": [
+        6,
+        4,
+        1,
+        3,
+        5,
+        8
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 81,
+      "digits": [
+        9,
+        7,
+        1,
+        5,
+        1,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 82,
+      "digits": [
+        9,
+        3,
+        5,
+        0,
+        5,
+        3
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 83,
+      "digits": [
+        1,
+        3,
+        6,
+        1,
+        2,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          1,
+          2
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 84,
+      "digits": [
+        5,
+        8,
+        0,
+        1,
+        4,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          0,
+          1
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 85,
+      "digits": [
+        3,
+        3,
+        8,
+        4,
+        0,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 86,
+      "digits": [
+        9,
+        5,
+        0,
+        3,
+        2,
+        0
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 87,
+      "digits": [
+        7,
+        4,
+        0,
+        9,
+        4,
+        2
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 88,
+      "digits": [
+        3,
+        2,
+        9,
+        6,
+        9,
+        5
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 89,
+      "digits": [
+        5,
+        8,
+        5,
+        4,
+        4,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 90,
+      "digits": [
+        2,
+        3,
+        5,
+        8,
+        5,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          2,
+          3
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 91,
+      "digits": [
+        5,
+        8,
+        6,
+        0,
+        5,
+        4
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 92,
+      "digits": [
+        4,
+        8,
+        7,
+        3,
+        8,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 93,
+      "digits": [
+        1,
+        8,
+        0,
+        2,
+        4,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 94,
+      "digits": [
+        8,
+        0,
+        7,
+        1,
+        2,
+        1
+      ],
+      "consecutive_sequences": [
+        [
+          1,
+          2
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 95,
+      "digits": [
+        8,
+        4,
+        1,
+        3,
+        3,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 96,
+      "digits": [
+        3,
+        3,
+        0,
+        4,
+        8,
+        1
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 97,
+      "digits": [
+        7,
+        8,
+        3,
+        6,
+        8,
+        8
+      ],
+      "consecutive_sequences": [
+        [
+          7,
+          8
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 98,
+      "digits": [
+        7,
+        0,
+        7,
+        4,
+        3,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 99,
+      "digits": [
+        2,
+        0,
+        2,
+        9,
+        9,
+        7
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 100,
+      "digits": [
+        4,
+        1,
+        9,
+        3,
+        9,
+        9
+      ],
+      "consecutive_sequences": [],
+      "total_consecutive": 0,
+      "max_consecutive_length": 0
+    },
+    {
+      "round": 101,
+      "digits": [
+        0,
+        6,
+        8,
+        5,
+        6,
+        1
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    },
+    {
+      "round": 102,
+      "digits": [
+        0,
+        3,
+        0,
+        5,
+        6,
+        9
+      ],
+      "consecutive_sequences": [
+        [
+          5,
+          6
+        ]
+      ],
+      "total_consecutive": 2,
+      "max_consecutive_length": 2
+    }
+  ],
+  "consecutive_counts": {
+    "0": 63,
+    "2": 36,
+    "3": 2,
+    "5": 1
+  },
+  "consecutive_lengths": {
+    "0": 63,
+    "2": 36,
+    "3": 2,
+    "5": 1
+  },
+  "statistics": {
+    "avg_consecutive_count": 0.8137254901960784,
+    "max_consecutive_in_single_round": 5,
+    "avg_max_consecutive_length": 0.8137254901960784,
+    "rounds_with_consecutive": 39,
+    "consecutive_probability": 38.23529411764706
+  }
+}

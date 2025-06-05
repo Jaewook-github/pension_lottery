@@ -1,0 +1,1513 @@
+{
+  "by_round": [
+    {
+      "round": 1,
+      "pattern": "홀짝짝홀홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        1,
+        6,
+        2,
+        1,
+        3,
+        2
+      ]
+    },
+    {
+      "round": 2,
+      "pattern": "짝홀짝홀홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        5,
+        0,
+        5,
+        5,
+        8
+      ]
+    },
+    {
+      "round": 3,
+      "pattern": "홀짝짝홀홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        5,
+        4,
+        4,
+        9,
+        5,
+        5
+      ]
+    },
+    {
+      "round": 4,
+      "pattern": "홀짝짝짝짝짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        1,
+        2,
+        4,
+        4,
+        2,
+        0
+      ]
+    },
+    {
+      "round": 5,
+      "pattern": "홀홀짝짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        7,
+        5,
+        4,
+        6,
+        5,
+        5
+      ]
+    },
+    {
+      "round": 6,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        1,
+        9,
+        3,
+        2,
+        0,
+        2
+      ]
+    },
+    {
+      "round": 7,
+      "pattern": "홀홀홀짝홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        5,
+        9,
+        7,
+        0,
+        9,
+        3
+      ]
+    },
+    {
+      "round": 8,
+      "pattern": "짝홀짝짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        2,
+        3,
+        4,
+        0,
+        5,
+        8
+      ]
+    },
+    {
+      "round": 9,
+      "pattern": "홀홀홀홀홀짝",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        1,
+        3,
+        3,
+        5,
+        1,
+        0
+      ]
+    },
+    {
+      "round": 10,
+      "pattern": "홀홀짝홀홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        7,
+        7,
+        0,
+        1,
+        7,
+        3
+      ]
+    },
+    {
+      "round": 11,
+      "pattern": "짝짝홀짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        8,
+        6,
+        7,
+        6,
+        5,
+        4
+      ]
+    },
+    {
+      "round": 12,
+      "pattern": "짝홀짝짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        0,
+        7,
+        6,
+        6,
+        7,
+        6
+      ]
+    },
+    {
+      "round": 13,
+      "pattern": "짝짝홀짝짝홀",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        6,
+        6,
+        9,
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "round": 14,
+      "pattern": "짝홀짝짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        4,
+        3,
+        2,
+        4,
+        9,
+        6
+      ]
+    },
+    {
+      "round": 15,
+      "pattern": "짝홀홀짝홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        7,
+        7,
+        2,
+        3,
+        8
+      ]
+    },
+    {
+      "round": 16,
+      "pattern": "짝짝짝짝홀짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        6,
+        6,
+        4,
+        0,
+        5,
+        6
+      ]
+    },
+    {
+      "round": 17,
+      "pattern": "홀홀홀짝짝홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        3,
+        1,
+        7,
+        2,
+        2,
+        7
+      ]
+    },
+    {
+      "round": 18,
+      "pattern": "홀짝짝짝짝짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        5,
+        6,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "round": 19,
+      "pattern": "짝홀홀짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        8,
+        5,
+        9,
+        2,
+        1,
+        9
+      ]
+    },
+    {
+      "round": 20,
+      "pattern": "짝홀홀짝짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        8,
+        1,
+        9,
+        6,
+        0,
+        5
+      ]
+    },
+    {
+      "round": 21,
+      "pattern": "짝홀홀홀홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        2,
+        3,
+        9,
+        9,
+        3,
+        7
+      ]
+    },
+    {
+      "round": 22,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        9,
+        1,
+        3,
+        6,
+        2,
+        2
+      ]
+    },
+    {
+      "round": 23,
+      "pattern": "홀홀짝짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        1,
+        5,
+        8,
+        0,
+        7,
+        1
+      ]
+    },
+    {
+      "round": 24,
+      "pattern": "짝짝짝홀짝홀",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        0,
+        0,
+        2,
+        9,
+        8,
+        9
+      ]
+    },
+    {
+      "round": 25,
+      "pattern": "짝짝홀짝홀홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        6,
+        3,
+        6,
+        3,
+        7
+      ]
+    },
+    {
+      "round": 26,
+      "pattern": "홀홀짝짝홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        1,
+        9,
+        2,
+        8,
+        5,
+        6
+      ]
+    },
+    {
+      "round": 27,
+      "pattern": "짝홀짝짝짝짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        4,
+        1,
+        2,
+        0,
+        0,
+        8
+      ]
+    },
+    {
+      "round": 28,
+      "pattern": "짝짝짝짝홀홀",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        0,
+        8,
+        0,
+        8,
+        3,
+        9
+      ]
+    },
+    {
+      "round": 29,
+      "pattern": "홀홀홀홀홀짝",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        3,
+        5,
+        5,
+        1,
+        9,
+        2
+      ]
+    },
+    {
+      "round": 30,
+      "pattern": "짝짝홀짝홀홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        8,
+        7,
+        2,
+        1,
+        5
+      ]
+    },
+    {
+      "round": 31,
+      "pattern": "홀홀홀홀홀짝",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        7,
+        7,
+        1,
+        5,
+        9,
+        8
+      ]
+    },
+    {
+      "round": 32,
+      "pattern": "홀홀홀홀홀짝",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        5,
+        7,
+        9,
+        1,
+        7,
+        6
+      ]
+    },
+    {
+      "round": 33,
+      "pattern": "홀홀짝짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        5,
+        9,
+        6,
+        2,
+        1,
+        9
+      ]
+    },
+    {
+      "round": 34,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        9,
+        7,
+        7,
+        6,
+        8,
+        6
+      ]
+    },
+    {
+      "round": 35,
+      "pattern": "홀짝짝짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        5,
+        4,
+        2,
+        4,
+        5,
+        4
+      ]
+    },
+    {
+      "round": 36,
+      "pattern": "홀홀홀홀홀홀",
+      "odd_count": 6,
+      "even_count": 0,
+      "digits": [
+        7,
+        3,
+        5,
+        7,
+        5,
+        7
+      ]
+    },
+    {
+      "round": 37,
+      "pattern": "짝홀홀짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        4,
+        5,
+        3,
+        8,
+        7,
+        7
+      ]
+    },
+    {
+      "round": 38,
+      "pattern": "홀짝홀짝홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        3,
+        0,
+        7,
+        8,
+        3,
+        6
+      ]
+    },
+    {
+      "round": 39,
+      "pattern": "홀홀홀홀홀홀",
+      "odd_count": 6,
+      "even_count": 0,
+      "digits": [
+        1,
+        9,
+        9,
+        1,
+        3,
+        7
+      ]
+    },
+    {
+      "round": 40,
+      "pattern": "짝홀홀짝짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        6,
+        3,
+        1,
+        0,
+        8,
+        6
+      ]
+    },
+    {
+      "round": 41,
+      "pattern": "홀짝짝홀홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        7,
+        4,
+        2,
+        7,
+        1,
+        4
+      ]
+    },
+    {
+      "round": 42,
+      "pattern": "홀홀짝짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        9,
+        7,
+        4,
+        2,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 43,
+      "pattern": "홀짝홀짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        5,
+        8,
+        9,
+        8,
+        3,
+        9
+      ]
+    },
+    {
+      "round": 44,
+      "pattern": "짝짝짝짝홀짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        6,
+        6,
+        8,
+        8,
+        1,
+        8
+      ]
+    },
+    {
+      "round": 45,
+      "pattern": "홀홀짝홀홀짝",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        3,
+        1,
+        8,
+        7,
+        5,
+        4
+      ]
+    },
+    {
+      "round": 46,
+      "pattern": "짝홀짝홀짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        0,
+        1,
+        0,
+        9,
+        6,
+        3
+      ]
+    },
+    {
+      "round": 47,
+      "pattern": "홀짝홀홀짝홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        9,
+        4,
+        1,
+        3,
+        2,
+        7
+      ]
+    },
+    {
+      "round": 48,
+      "pattern": "홀홀홀홀짝홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        7,
+        7,
+        9,
+        3,
+        6,
+        3
+      ]
+    },
+    {
+      "round": 49,
+      "pattern": "홀짝홀짝짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        3,
+        0,
+        5,
+        2,
+        4,
+        8
+      ]
+    },
+    {
+      "round": 50,
+      "pattern": "홀홀짝홀홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        5,
+        9,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "round": 51,
+      "pattern": "홀홀짝짝홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        5,
+        1,
+        0,
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "round": 52,
+      "pattern": "홀홀홀짝짝홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        5,
+        9,
+        7,
+        2,
+        2,
+        7
+      ]
+    },
+    {
+      "round": 53,
+      "pattern": "짝짝홀짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        6,
+        4,
+        9,
+        6,
+        3,
+        8
+      ]
+    },
+    {
+      "round": 54,
+      "pattern": "짝짝홀짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        6,
+        2,
+        7,
+        0,
+        5,
+        4
+      ]
+    },
+    {
+      "round": 55,
+      "pattern": "짝홀홀짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        4,
+        7,
+        7,
+        8,
+        7,
+        9
+      ]
+    },
+    {
+      "round": 56,
+      "pattern": "홀홀홀홀홀짝",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        9,
+        9,
+        3,
+        1,
+        7,
+        4
+      ]
+    },
+    {
+      "round": 57,
+      "pattern": "짝홀짝짝짝짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        2,
+        7,
+        2,
+        2,
+        8,
+        6
+      ]
+    },
+    {
+      "round": 58,
+      "pattern": "홀홀홀홀짝홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        9,
+        3,
+        9,
+        3,
+        2,
+        7
+      ]
+    },
+    {
+      "round": 59,
+      "pattern": "홀홀홀짝홀짝",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        1,
+        5,
+        9,
+        0,
+        5,
+        6
+      ]
+    },
+    {
+      "round": 60,
+      "pattern": "짝홀짝홀홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        2,
+        1,
+        6,
+        5,
+        1,
+        0
+      ]
+    },
+    {
+      "round": 61,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        5,
+        7,
+        5,
+        8,
+        6,
+        2
+      ]
+    },
+    {
+      "round": 62,
+      "pattern": "짝홀짝짝홀홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        0,
+        1,
+        4,
+        0,
+        7,
+        3
+      ]
+    },
+    {
+      "round": 63,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        3,
+        3,
+        5,
+        2,
+        2,
+        6
+      ]
+    },
+    {
+      "round": 64,
+      "pattern": "짝홀짝짝짝홀",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        6,
+        7,
+        6,
+        0,
+        0,
+        3
+      ]
+    },
+    {
+      "round": 65,
+      "pattern": "홀홀짝홀홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        7,
+        3,
+        2,
+        3,
+        7,
+        5
+      ]
+    },
+    {
+      "round": 66,
+      "pattern": "홀홀짝짝홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        9,
+        9,
+        0,
+        8,
+        3,
+        4
+      ]
+    },
+    {
+      "round": 67,
+      "pattern": "짝짝홀홀홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        8,
+        0,
+        7,
+        5,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 68,
+      "pattern": "홀홀홀짝홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        1,
+        9,
+        1,
+        0,
+        7,
+        5
+      ]
+    },
+    {
+      "round": 69,
+      "pattern": "홀홀홀홀홀짝",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        7,
+        7,
+        5,
+        5,
+        3,
+        0
+      ]
+    },
+    {
+      "round": 70,
+      "pattern": "짝짝짝짝홀짝",
+      "odd_count": 1,
+      "even_count": 5,
+      "digits": [
+        2,
+        4,
+        8,
+        6,
+        7,
+        2
+      ]
+    },
+    {
+      "round": 71,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        1,
+        5,
+        9,
+        4,
+        8,
+        6
+      ]
+    },
+    {
+      "round": 72,
+      "pattern": "홀홀짝짝짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        1,
+        1,
+        4,
+        6,
+        8,
+        7
+      ]
+    },
+    {
+      "round": 73,
+      "pattern": "홀짝홀짝짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        5,
+        0,
+        1,
+        0,
+        2,
+        6
+      ]
+    },
+    {
+      "round": 74,
+      "pattern": "짝홀짝홀짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        2,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "round": 75,
+      "pattern": "짝홀짝홀짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        6,
+        5,
+        8,
+        3,
+        4,
+        0
+      ]
+    },
+    {
+      "round": 76,
+      "pattern": "짝홀짝홀짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        8,
+        9,
+        0,
+        9,
+        6,
+        6
+      ]
+    },
+    {
+      "round": 77,
+      "pattern": "짝홀짝홀짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        3,
+        6,
+        3,
+        0,
+        5
+      ]
+    },
+    {
+      "round": 78,
+      "pattern": "홀홀홀짝짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        5,
+        1,
+        5,
+        8,
+        8,
+        4
+      ]
+    },
+    {
+      "round": 79,
+      "pattern": "짝짝짝홀홀홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        0,
+        8,
+        3,
+        7,
+        9
+      ]
+    },
+    {
+      "round": 80,
+      "pattern": "짝짝홀홀홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        6,
+        4,
+        1,
+        3,
+        5,
+        8
+      ]
+    },
+    {
+      "round": 81,
+      "pattern": "홀홀홀홀홀홀",
+      "odd_count": 6,
+      "even_count": 0,
+      "digits": [
+        9,
+        7,
+        1,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "round": 82,
+      "pattern": "홀홀홀짝홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        9,
+        3,
+        5,
+        0,
+        5,
+        3
+      ]
+    },
+    {
+      "round": 83,
+      "pattern": "홀홀짝홀짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        1,
+        3,
+        6,
+        1,
+        2,
+        8
+      ]
+    },
+    {
+      "round": 84,
+      "pattern": "홀짝짝홀짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        5,
+        8,
+        0,
+        1,
+        4,
+        8
+      ]
+    },
+    {
+      "round": 85,
+      "pattern": "홀홀짝짝짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        3,
+        3,
+        8,
+        4,
+        0,
+        7
+      ]
+    },
+    {
+      "round": 86,
+      "pattern": "홀홀짝홀짝짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        9,
+        5,
+        0,
+        3,
+        2,
+        0
+      ]
+    },
+    {
+      "round": 87,
+      "pattern": "홀짝짝홀짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        7,
+        4,
+        0,
+        9,
+        4,
+        2
+      ]
+    },
+    {
+      "round": 88,
+      "pattern": "홀짝홀짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        3,
+        2,
+        9,
+        6,
+        9,
+        5
+      ]
+    },
+    {
+      "round": 89,
+      "pattern": "홀짝홀짝짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        5,
+        8,
+        5,
+        4,
+        4,
+        9
+      ]
+    },
+    {
+      "round": 90,
+      "pattern": "짝홀홀짝홀짝",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        2,
+        3,
+        5,
+        8,
+        5,
+        8
+      ]
+    },
+    {
+      "round": 91,
+      "pattern": "홀짝짝짝홀짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        5,
+        8,
+        6,
+        0,
+        5,
+        4
+      ]
+    },
+    {
+      "round": 92,
+      "pattern": "짝짝홀홀짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        4,
+        8,
+        7,
+        3,
+        8,
+        1
+      ]
+    },
+    {
+      "round": 93,
+      "pattern": "홀짝짝짝짝홀",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        1,
+        8,
+        0,
+        2,
+        4,
+        9
+      ]
+    },
+    {
+      "round": 94,
+      "pattern": "짝짝홀홀짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        8,
+        0,
+        7,
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "round": 95,
+      "pattern": "짝짝홀홀홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        8,
+        4,
+        1,
+        3,
+        3,
+        1
+      ]
+    },
+    {
+      "round": 96,
+      "pattern": "홀홀짝짝짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        3,
+        3,
+        0,
+        4,
+        8,
+        1
+      ]
+    },
+    {
+      "round": 97,
+      "pattern": "홀짝홀짝짝짝",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        7,
+        8,
+        3,
+        6,
+        8,
+        8
+      ]
+    },
+    {
+      "round": 98,
+      "pattern": "홀짝홀짝홀홀",
+      "odd_count": 4,
+      "even_count": 2,
+      "digits": [
+        7,
+        0,
+        7,
+        4,
+        3,
+        7
+      ]
+    },
+    {
+      "round": 99,
+      "pattern": "짝짝짝홀홀홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        2,
+        0,
+        2,
+        9,
+        9,
+        7
+      ]
+    },
+    {
+      "round": 100,
+      "pattern": "짝홀홀홀홀홀",
+      "odd_count": 5,
+      "even_count": 1,
+      "digits": [
+        4,
+        1,
+        9,
+        3,
+        9,
+        9
+      ]
+    },
+    {
+      "round": 101,
+      "pattern": "짝짝짝홀짝홀",
+      "odd_count": 2,
+      "even_count": 4,
+      "digits": [
+        0,
+        6,
+        8,
+        5,
+        6,
+        1
+      ]
+    },
+    {
+      "round": 102,
+      "pattern": "짝홀짝홀짝홀",
+      "odd_count": 3,
+      "even_count": 3,
+      "digits": [
+        0,
+        3,
+        0,
+        5,
+        6,
+        9
+      ]
+    }
+  ],
+  "overall_distribution": {
+    "홀짝짝홀홀짝": 2,
+    "짝홀짝홀홀짝": 2,
+    "홀짝짝홀홀홀": 1,
+    "홀짝짝짝짝짝": 2,
+    "홀홀짝짝홀홀": 4,
+    "홀홀홀짝짝짝": 7,
+    "홀홀홀짝홀홀": 3,
+    "짝홀짝짝홀짝": 3,
+    "홀홀홀홀홀짝": 6,
+    "홀홀짝홀홀홀": 3,
+    "짝짝홀짝홀짝": 3,
+    "짝짝홀짝짝홀": 1,
+    "짝홀홀짝홀짝": 2,
+    "짝짝짝짝홀짝": 3,
+    "홀홀홀짝짝홀": 2,
+    "짝홀홀짝홀홀": 3,
+    "짝홀홀짝짝홀": 1,
+    "짝홀홀홀홀홀": 2,
+    "짝짝짝홀짝홀": 2,
+    "짝짝홀짝홀홀": 2,
+    "홀홀짝짝홀짝": 3,
+    "짝홀짝짝짝짝": 2,
+    "짝짝짝짝홀홀": 1,
+    "홀짝짝짝홀짝": 2,
+    "홀홀홀홀홀홀": 3,
+    "홀짝홀짝홀짝": 1,
+    "짝홀홀짝짝짝": 1,
+    "홀짝홀짝홀홀": 3,
+    "홀홀짝홀홀짝": 1,
+    "짝홀짝홀짝홀": 4,
+    "홀짝홀홀짝홀": 1,
+    "홀홀홀홀짝홀": 2,
+    "홀짝홀짝짝짝": 3,
+    "홀홀홀짝홀짝": 1,
+    "짝홀짝짝홀홀": 1,
+    "짝홀짝짝짝홀": 1,
+    "짝짝홀홀홀홀": 2,
+    "홀홀짝짝짝홀": 3,
+    "짝홀짝홀짝짝": 2,
+    "짝짝짝홀홀홀": 2,
+    "짝짝홀홀홀짝": 1,
+    "홀홀짝홀짝짝": 2,
+    "홀짝짝홀짝짝": 2,
+    "홀짝홀짝짝홀": 1,
+    "짝짝홀홀짝홀": 2,
+    "홀짝짝짝짝홀": 1
+  },
+  "position_patterns": {
+    "자리1": {
+      "홀": 59,
+      "짝": 43
+    },
+    "자리2": {
+      "짝": 38,
+      "홀": 64
+    },
+    "자리3": {
+      "짝": 49,
+      "홀": 53
+    },
+    "자리4": {
+      "홀": 42,
+      "짝": 60
+    },
+    "자리5": {
+      "홀": 60,
+      "짝": 42
+    },
+    "자리6": {
+      "짝": 51,
+      "홀": 51
+    }
+  },
+  "statistics": {
+    "avg_odd_count": 3.2254901960784315,
+    "max_odd_count": 6,
+    "min_odd_count": 1,
+    "most_common_pattern": "홀홀홀짝짝짝",
+    "total_patterns": 46
+  }
+}

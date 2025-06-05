@@ -1,0 +1,112 @@
+{
+  "analysis_summary": {
+    "total_rounds": 51,
+    "data_range": "1회 ~ 51회",
+    "lottery_type": "720",
+    "analysis_date": "2025-06-05T21:50:40.931200"
+  },
+  "jo_analysis": {
+    "total_jos": 5,
+    "most_frequent_jo": {
+      "jo": 4,
+      "count": 17,
+      "percentage": 33.33
+    },
+    "least_frequent_jo": {
+      "jo": 5,
+      "count": 5,
+      "percentage": 9.8
+    },
+    "jo_distribution": {
+      "1": 12,
+      "2": 7,
+      "3": 10,
+      "4": 17,
+      "5": 5
+    },
+    "jo_percentages": {
+      "1": 23.53,
+      "2": 13.73,
+      "3": 19.61,
+      "4": 33.33,
+      "5": 9.8
+    }
+  },
+  "second_number_analysis": {
+    "most_frequent_digit": {
+      "digit": "0",
+      "count": 9,
+      "percentage": 17.65
+    },
+    "least_frequent_digit": {
+      "digit": "1",
+      "count": 2,
+      "percentage": 3.92
+    },
+    "digit_distribution": {
+      "0": 9,
+      "1": 2,
+      "2": 5,
+      "3": 6,
+      "4": 3,
+      "5": 6,
+      "6": 5,
+      "7": 6,
+      "8": 3,
+      "9": 6
+    },
+    "digit_percentages": {
+      "0": 17.65,
+      "1": 3.92,
+      "2": 9.8,
+      "3": 11.76,
+      "4": 5.88,
+      "5": 11.76,
+      "6": 9.8,
+      "7": 11.76,
+      "8": 5.88,
+      "9": 11.76
+    }
+  },
+  "trend_analysis": {
+    "trend_period": "최근 50회차 (2회 ~ 51회)",
+    "jo_trends": {
+      "1": {
+        "overall_percentage": 23.53,
+        "recent_percentage": 24.0,
+        "change": 0.47,
+        "trend": "stable"
+      },
+      "2": {
+        "overall_percentage": 13.73,
+        "recent_percentage": 14.0,
+        "change": 0.27,
+        "trend": "stable"
+      },
+      "3": {
+        "overall_percentage": 19.61,
+        "recent_percentage": 20.0,
+        "change": 0.39,
+        "trend": "stable"
+      },
+      "4": {
+        "overall_percentage": 33.33,
+        "recent_percentage": 32.0,
+        "change": -1.33,
+        "trend": "stable"
+      },
+      "5": {
+        "overall_percentage": 9.8,
+        "recent_percentage": 10.0,
+        "change": 0.2,
+        "trend": "stable"
+      }
+    },
+    "analysis_date": "2025-06-05T21:50:40.931200"
+  },
+  "key_insights": [
+    "총 51회차 데이터를 분석했습니다.",
+    "가장 많이 나온 조는 4조로 17회 (33.33%) 출현했습니다.",
+    "2등 당첨번호 끝자리 중 '0'이 9회로 가장 많이 출현했습니다."
+  ]
+}

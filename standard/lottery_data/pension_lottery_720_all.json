@@ -1,0 +1,818 @@
+[
+  {
+    "round": 1,
+    "first_number": "162132",
+    "second_number": "9",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 2,
+    "first_number": "450558",
+    "second_number": "7",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 3,
+    "first_number": "544955",
+    "second_number": "9",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 4,
+    "first_number": "124420",
+    "second_number": "7",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 5,
+    "first_number": "754655",
+    "second_number": "9",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 6,
+    "first_number": "193202",
+    "second_number": "0",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 7,
+    "first_number": "597093",
+    "second_number": "5",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 8,
+    "first_number": "234058",
+    "second_number": "2",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 9,
+    "first_number": "133510",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 10,
+    "first_number": "770173",
+    "second_number": "3",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 11,
+    "first_number": "867654",
+    "second_number": "0",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 12,
+    "first_number": "076676",
+    "second_number": "4",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 13,
+    "first_number": "669245",
+    "second_number": "9",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 14,
+    "first_number": "432496",
+    "second_number": "9",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 15,
+    "first_number": "477238",
+    "second_number": "2",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 16,
+    "first_number": "664056",
+    "second_number": "5",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 17,
+    "first_number": "317227",
+    "second_number": "8",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 18,
+    "first_number": "562222",
+    "second_number": "0",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 19,
+    "first_number": "859219",
+    "second_number": "6",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 20,
+    "first_number": "819605",
+    "second_number": "7",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 21,
+    "first_number": "239937",
+    "second_number": "7",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 22,
+    "first_number": "913622",
+    "second_number": "4",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 23,
+    "first_number": "158071",
+    "second_number": "0",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 24,
+    "first_number": "002989",
+    "second_number": "9",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 25,
+    "first_number": "463637",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 26,
+    "first_number": "192856",
+    "second_number": "4",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 27,
+    "first_number": "412008",
+    "second_number": "2",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 28,
+    "first_number": "080839",
+    "second_number": "6",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 29,
+    "first_number": "355192",
+    "second_number": "8",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 30,
+    "first_number": "487215",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 31,
+    "first_number": "771598",
+    "second_number": "3",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 32,
+    "first_number": "579176",
+    "second_number": "3",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 33,
+    "first_number": "596219",
+    "second_number": "7",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 34,
+    "first_number": "977686",
+    "second_number": "6",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 35,
+    "first_number": "542454",
+    "second_number": "3",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 36,
+    "first_number": "735757",
+    "second_number": "3",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 37,
+    "first_number": "453877",
+    "second_number": "6",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 38,
+    "first_number": "307836",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 39,
+    "first_number": "199137",
+    "second_number": "8",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 40,
+    "first_number": "631086",
+    "second_number": "2",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 41,
+    "first_number": "742714",
+    "second_number": "5",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 42,
+    "first_number": "974231",
+    "second_number": "3",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 43,
+    "first_number": "589839",
+    "second_number": "6",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 44,
+    "first_number": "668818",
+    "second_number": "1",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 45,
+    "first_number": "318754",
+    "second_number": "1",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 46,
+    "first_number": "010963",
+    "second_number": "7",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 47,
+    "first_number": "941327",
+    "second_number": "5",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 48,
+    "first_number": "779363",
+    "second_number": "2",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 49,
+    "first_number": "305248",
+    "second_number": "5",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 50,
+    "first_number": "592111",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 51,
+    "first_number": "510012",
+    "second_number": "5",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 52,
+    "first_number": "597227",
+    "second_number": "5",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 53,
+    "first_number": "649638",
+    "second_number": "7",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 54,
+    "first_number": "627054",
+    "second_number": "5",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 55,
+    "first_number": "477879",
+    "second_number": "9",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 56,
+    "first_number": "993174",
+    "second_number": "9",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 57,
+    "first_number": "272286",
+    "second_number": "5",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 58,
+    "first_number": "939327",
+    "second_number": "4",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 59,
+    "first_number": "159056",
+    "second_number": "1",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 60,
+    "first_number": "216510",
+    "second_number": "3",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 61,
+    "first_number": "575862",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 62,
+    "first_number": "014073",
+    "second_number": "9",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 63,
+    "first_number": "335226",
+    "second_number": "1",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 64,
+    "first_number": "676003",
+    "second_number": "4",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 65,
+    "first_number": "732375",
+    "second_number": "1",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 66,
+    "first_number": "990834",
+    "second_number": "4",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 67,
+    "first_number": "807531",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 68,
+    "first_number": "191075",
+    "second_number": "6",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 69,
+    "first_number": "775530",
+    "second_number": "5",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 70,
+    "first_number": "248672",
+    "second_number": "7",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 71,
+    "first_number": "159486",
+    "second_number": "8",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 72,
+    "first_number": "114687",
+    "second_number": "3",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 73,
+    "first_number": "501026",
+    "second_number": "7",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 74,
+    "first_number": "256789",
+    "second_number": "9",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 75,
+    "first_number": "658340",
+    "second_number": "3",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 76,
+    "first_number": "890966",
+    "second_number": "5",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 77,
+    "first_number": "436305",
+    "second_number": "3",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 78,
+    "first_number": "515884",
+    "second_number": "8",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 79,
+    "first_number": "408379",
+    "second_number": "4",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 80,
+    "first_number": "641358",
+    "second_number": "4",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 81,
+    "first_number": "971511",
+    "second_number": "9",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 82,
+    "first_number": "935053",
+    "second_number": "2",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 83,
+    "first_number": "136128",
+    "second_number": "4",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 84,
+    "first_number": "580148",
+    "second_number": "6",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 85,
+    "first_number": "338407",
+    "second_number": "0",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 86,
+    "first_number": "950320",
+    "second_number": "4",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 87,
+    "first_number": "740942",
+    "second_number": "5",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 88,
+    "first_number": "329695",
+    "second_number": "0",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 89,
+    "first_number": "585449",
+    "second_number": "0",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 90,
+    "first_number": "235858",
+    "second_number": "2",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 91,
+    "first_number": "586054",
+    "second_number": "0",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 92,
+    "first_number": "487381",
+    "second_number": "8",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 93,
+    "first_number": "180249",
+    "second_number": "4",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 94,
+    "first_number": "807121",
+    "second_number": "6",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 95,
+    "first_number": "841331",
+    "second_number": "9",
+    "jo": 5,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 96,
+    "first_number": "330481",
+    "second_number": "8",
+    "jo": 2,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 97,
+    "first_number": "783688",
+    "second_number": "2",
+    "jo": 1,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 98,
+    "first_number": "707437",
+    "second_number": "7",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 99,
+    "first_number": "202997",
+    "second_number": "6",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 100,
+    "first_number": "419399",
+    "second_number": "6",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 101,
+    "first_number": "068561",
+    "second_number": "7",
+    "jo": 4,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  },
+  {
+    "round": 102,
+    "first_number": "030569",
+    "second_number": "3",
+    "jo": 3,
+    "lottery_type": "720",
+    "crawl_date": "2025-06-05"
+  }
+]
